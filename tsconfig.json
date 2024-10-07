@@ -11,9 +11,13 @@
         "baseUrl": "./",
         "paths": {
             "@errors/*": ["src/errors/*"],
-            "@config/*": ["src/config/*"]
+            "@config/*": ["src/config/*"],
+            "@common/*": ["src/common/*"],
+            "@middlewares/*": ["src/middlewares/*"],
+            "@modules/*": ["src/modules/*"],
+            "@utils/*": ["src/utils/*"]
         }
     },
-    "exclude": ["node_modules/"],
+    "exclude": ["node_modules/", "dist/**/*"],
     "include": ["src/**/*.ts"]
 }
