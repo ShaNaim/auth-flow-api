@@ -7,7 +7,7 @@ import { CustomError } from './errors/CustomError';
 import { ErrorArgs } from '@errors/ErrorArgs';
 import { ErrorCodes } from '@errors/ErrorCodes';
 import { StatusCodes } from 'http-status-codes';
-import errorHandler from './middleware/errorHandler';
+import errorHandler from './middlewares/errorHandler';
 
 const app: Application = express();
 const server: Server = createServer(app);
