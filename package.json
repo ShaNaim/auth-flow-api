@@ -1,5 +1,5 @@
 {
-    "name": "e-commerce-api",
+    "name": "shopmate-api",
     "version": "1.0.0",
     "main": "src/server.ts",
     "scripts": {
@@ -12,7 +12,7 @@
         "format": "prettier --write ."
     },
     "engines": {
-        "node": ">=22.8.0",
+        "node": ">=20.5.1",
         "npm": ">=10.8.2",
         "ts-node": "^10.9.2",
         "typescript": "^5.6.2"
