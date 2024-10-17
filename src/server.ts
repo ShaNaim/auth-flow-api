@@ -16,7 +16,7 @@ import { StatusCodes } from 'http-status-codes';
 import router from './routes';
 import { requestLogger } from '@utils/provider/log.provider';
 import os from 'os';
-import { serverModes } from '@common/types/server.types';
+import { serverModes } from '@config/server';
 
 const app: Application = express();
 const server: Server = createServer(app);

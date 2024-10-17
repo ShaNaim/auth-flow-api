@@ -4,5 +4,3 @@ export const serverModes = {
     staging: 'staging',
     test: 'test'
 };
-
-export type Uptime = { original: number; formattedUptime: string };

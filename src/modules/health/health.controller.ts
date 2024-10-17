@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import os from 'os';
 import { responseObject } from '@provider/response.provider';
-import { Uptime } from '@common/types/server.types';
+import { Uptime } from '@utils/types/server.types';
 
 export function healthCheckController(req: Request, res: Response) {
     res.status(200).json(
