@@ -15,7 +15,8 @@
             "@common/*": ["src/common/*"],
             "@middlewares/*": ["src/middlewares/*"],
             "@modules/*": ["src/modules/*"],
-            "@utils/*": ["src/utils/*"]
+            "@utils/*": ["src/utils/*"],
+            "@provider/*": ["src/utils/provider/*"]
         }
     },
     "exclude": ["node_modules/", "dist/**/*"],

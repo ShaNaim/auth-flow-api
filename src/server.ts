@@ -1,30 +1,59 @@
 import 'module-alias/register';
 import express, { Application, Request, Response } from 'express';
 import errorHandler from '@middlewares/errorHandler';
-import envirinment from '@config/config';
+import environment from '@config/config';
+import hpp from 'hpp';
 import log from '@config/logger';
+import compression from 'compression';
+import cookieParser from 'cookie-parser';
+import helmet from 'helmet';
+import cors from 'cors';
 import { createServer, Server } from 'http';
 import { CustomError } from './errors/CustomError';
 import { ErrorArgs } from '@errors/ErrorArgs';
 import { ErrorCodes } from '@errors/ErrorCodes';
 import { StatusCodes } from 'http-status-codes';
+import router from './routes';
+import { requestLogger } from '@utils/provider/log.provider';
+import os from 'os';
+import { serverModes } from '@common/types/server.types';
 
 const app: Application = express();
 const server: Server = createServer(app);
 
-function initializeMiddlewares(): void {}
-function initializeHelmet(): void {}
+function initializeMiddlewares(): void {
+    app.use(cors());
+    app.use(express.json());
+    app.use(hpp());
+    app.use(compression());
+    app.use(cookieParser());
+    app.set('trust proxy', true);
+}
+
+function initializeHelmet(): void {
+    app.use(helmet());
+}
+
 function initializeRoutes(): void {
-    app.get(
-        '/',
-        (req, res, next) => {
-            console.log('hello');
-            next();
-        },
-        (req, res) => {
-            res.status(StatusCodes.OK).json({ data: 'OK' });
-        }
-    );
+    app.get('/', (req, res) => {
+        res.status(StatusCodes.OK).json({ data: 'OK' });
+    });
+    app.use(requestLogger);
+    app.use(router);
+}
+
+function initializeNetworkAccess(): void {
+    if (environment.mode !== serverModes.development) return;
+    const networkInterfaces = os.networkInterfaces();
+
+    // Find the IPv4 address in your network interfaces
+    Object.keys(networkInterfaces).forEach((interfaceName) => {
+        networkInterfaces[interfaceName]?.forEach((iface: { family: string; internal: any; address: any }) => {
+            if (iface.family === 'IPv4' && !iface.internal) {
+                log.info(`Network: http://${iface.address}:${environment.port}/`);
+            }
+        });
+    });
 }
 
 function initializeErrorHandling(): void {
@@ -34,7 +63,7 @@ function initializeErrorHandling(): void {
     });
 
     app.get('/known-error', (_, res, next) => {
-        next(
+        return next(
             new CustomError({
                 code: ErrorCodes.NotFound,
                 status: StatusCodes.NOT_FOUND,
@@ -64,11 +93,14 @@ function initializeErrorHandling(): void {
 
 function listen(): void {
     // We are now listening server instead of app
-    server.listen(envirinment.port, () => {
-        log.info(`=========================================`);
-        log.info(`Server started on port ${envirinment.port}`);
-        log.info(`=========================================`);
+    server.listen(environment.port, () => {
+        log.info(`Local: http://localhost:${environment.port}/`);
+        initializeNetworkAccess();
     });
 }
-listen();
+
+initializeMiddlewares();
+initializeHelmet();
 initializeRoutes();
+initializeErrorHandling();
+listen();

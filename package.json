@@ -26,7 +26,10 @@
     "description": "",
     "devDependencies": {
         "@rushstack/eslint-config": "^4.0.2",
-        "@types/express": "^5.0.0",
+        "@types/compression": "^1.7.5",
+        "@types/cookie-parser": "^1.4.7",
+        "@types/cors": "^2.8.17",
+        "@types/hpp": "^0.2.6",
         "@types/node": "^22.7.2",
         "@types/pino": "^7.0.4",
         "eslint": "^9.12.0",
@@ -35,17 +38,28 @@
         "nodemon": "^3.1.7",
         "prettier": "^3.3.3",
         "ts-node": "^10.9.2",
-        "typescript": "^5.6.2"
+        "typescript": "^4.9.3"
     },
     "dependencies": {
+        "@types/express": "^4.17.21",
+        "compression": "^1.7.4",
+        "cookie-parser": "^1.4.6",
+        "cors": "^2.8.5",
         "dayjs": "^1.11.13",
         "dotenv": "^16.4.5",
-        "express": "^4.21.0",
+        "envalid": "^8.0.0",
+        "express": "^4.18.2",
+        "helmet": "^8.0.0",
+        "hpp": "^0.2.3",
         "http": "^0.0.1-security",
         "http-status-codes": "^2.3.0",
         "module-alias": "^2.2.3",
         "pino": "^9.4.0",
         "pino-pretty": "^11.2.2"
+    },
+    "lint-staged": {
+        "*.(ts|tsx)": "eslint --cache --fix",
+        "*": "prettier --write --ignore-unknown"
     },
     "_moduleAliases": {
         "@errors": "src/errors",
@@ -53,6 +67,10 @@
         "@common": "src/common",
         "@middlewares": "src/middlewares",
         "@modules": "src/modules",
-        "@utils": "src/utils"
+        "@utils": "src/utils",
+        "@provider": "src/utils/provider"
+    },
+    "overrides": {
+        "@types/express": "4.17.20"
     }
 }
