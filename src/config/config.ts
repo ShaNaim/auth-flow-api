@@ -1,5 +1,8 @@
 import dotenv from 'dotenv';
+import validateEnv from '@utils/validator/env.validator';
+
 dotenv.config();
+validateEnv();
 
 export default {
     port: process.env.PORT || 3060,

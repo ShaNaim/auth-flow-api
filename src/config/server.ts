@@ -4,3 +4,5 @@ export const serverModes = {
     staging: 'staging',
     test: 'test'
 };
+
+export const logLevels = { fatal: 'fatal', error: 'error', warn: 'warn', info: 'info', debug: 'debug', trace: 'trace', silent: 'silent' };
