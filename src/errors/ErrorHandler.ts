@@ -2,7 +2,7 @@ import { Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { CustomError } from './CustomError';
 import { ErrorArgs } from './ErrorArgs';
-import log from '../config/logger';
+import log from '../config/logger.config';
 import { ErrorCodes } from './ErrorCodes';
 
 class ErrorHandler {

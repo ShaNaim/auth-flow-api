@@ -3,7 +3,7 @@ import express, { Application, Request, Response } from 'express';
 import errorHandler from '@middlewares/errorHandler';
 import environment from '@config/config';
 import hpp from 'hpp';
-import log from '@config/logger';
+import log from '@config/logger.config';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
@@ -16,7 +16,7 @@ import { StatusCodes } from 'http-status-codes';
 import router from './routes';
 import { requestLogger } from '@utils/provider/log.provider';
 import os from 'os';
-import { serverModes } from '@config/server';
+import { serverModes } from '@config/server.config';
 
 const app: Application = express();
 const server: Server = createServer(app);

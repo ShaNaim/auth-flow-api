@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import log from '@config/logger';
+import log from '@config/logger.config';
 import { gracefulErrorHandler } from '@errors/ErrorHandler';
 
 /**

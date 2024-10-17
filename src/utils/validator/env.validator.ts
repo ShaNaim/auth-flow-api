@@ -1,5 +1,5 @@
 import { cleanEnv, str, port, num } from 'envalid';
-import { serverModes, logLevels } from '@config/server';
+import { serverModes, logLevels } from '@config/server.config';
 function validateEnv(): void {
     cleanEnv(process.env, {
         NODE_ENV: str({
