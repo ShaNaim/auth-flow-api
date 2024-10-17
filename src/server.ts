@@ -39,7 +39,7 @@ function initializeRoutes(): void {
         res.status(StatusCodes.OK).json({ data: 'OK' });
     });
     app.use(requestLogger);
-    app.use(router);
+    app.use(`/v/${environment.version}`, router);
 }
 
 function initializeNetworkAccess(): void {

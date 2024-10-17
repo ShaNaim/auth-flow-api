@@ -10,7 +10,7 @@ function validateEnv(): void {
         }),
         HOSTNAME: str(),
         PORT: port({ default: 3000 }),
-        API_VERSION: num({ default: 0 })
+        API_VERSION: num({ default: 1 })
     });
 }
 
