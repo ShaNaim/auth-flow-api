@@ -18,6 +18,7 @@ export class CustomError extends Error {
         this.status = args.status;
         this.code = args.code;
         this.description = args.description;
+        this.metaData = args.metaData;
 
         if (args.isOperational !== undefined) {
             this.isOperational = args.isOperational;

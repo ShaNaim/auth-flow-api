@@ -4,7 +4,7 @@ import { CustomError } from './CustomError';
 import { ErrorArgs } from './ErrorArgs';
 import log from '../config/logger.config';
 import { ErrorCodes } from './ErrorCodes';
-
+import { responseObject } from '@utils/provider/response.provider';
 class ErrorHandler {
     private static isTrustedError(error: Error): boolean {
         if (error instanceof CustomError) {
@@ -15,11 +15,14 @@ class ErrorHandler {
     }
 
     private static handleTrustedError(error: CustomError, res: Response): Response {
-        return res.status(error.status).json({
-            success: false,
-            data: null,
-            errors: error
-        });
+        return res.status(error.status).json(
+            responseObject(
+                {
+                    ...error
+                },
+                true
+            )
+        );
     }
 
     private static handleCriticalError(error: Error | CustomError, res?: Response): Response | void {
