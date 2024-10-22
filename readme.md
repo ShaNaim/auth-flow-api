@@ -11,47 +11,88 @@ features, with development tools for linting, formatting, and maintaining code q
 -   **npm**: `>=10.8.2`
 
 -   Ensure that Node.js and npm versions match the requirements specified in the `engines` section. Use tools like `nvm` (Node Version Manager) for
-    managing Node.js versions.
+
+managing Node.js versions.
 
 ### Installation
 
 1.  **Clone the repository**:
 
 ```bash
-git clone https://github.com/ShaNaim/shopmate.git
+git  clone  https://github.com/ShaNaim/shopmate.git
+```
 
-cd shopmate
+```bash
+cd  shopmate
 ```
 
 2.  **Install dependencies**: Make sure to install both the development and production dependencies:
 
 ```bash
-npm install
+npm  install
 ```
 
 3.  **Environment Setup**:
 
 -   Create a `.env` file in the root of your project with the necessary environment variables. Refer to `.env.example` if available.
+
 -   Use the `envalid` package to ensure that your environment variables are properly validated.
--
 
-4.  **Build the project**: Compile the TypeScript files into JavaScript:
+4. **Database Setup**:
 
-```bash
-npm run build
-```
+    - **Install PostgreSQL**: If PostgreSQL is not installed on your machine, follow the instructions for your operating system:
+        - On macOS:
+            ```bash
+            brew install postgresql
+            ```
+        - On Ubuntu:
+            ```bash
+            sudo apt update
+            ```
+            ```bash
+            sudo apt install postgresql postgresql-contrib
+            ```
+    - **Configure PostgreSQL**: After installation, start PostgreSQL and create a new database:
 
-5.  **Start the server**: After building the project, start the server using:
+        ```bash
+        # Start PostgreSQL service
+        sudo service postgresql start
+        ```
 
-```bash
-npm start
-```
+        ```bash
+        # Open PostgreSQL prompt
+        sudo -u postgres psql
+        ```
 
-6.  **Run in Development Mode**: To run the server in development mode with automatic reloads using `nodemon` and `ts-node`, use:
+        ```sql
+        # Create a new database for ShopMate
+        CREATE DATABASE shopmate;
+        ```
 
-```bash
-npm run dev
-```
+    - **Configure Prisma**:
+        - **Set `DATABASE_URL` in the `.env` file**: Replace the `DATABASE_URL` in your `.env` with the connection URL for PostgreSQL. For example:
+          `env DATABASE_URL="postgresql://user:password@localhost:5432/shopmate" `
+        - **Run Prisma Migrations**: After configuring the database, run Prisma migrations to create the necessary tables:
+            ```bash
+            npx prisma migrate dev --name init
+            ```
+            This will apply the initial database schema based on your `schema.prisma`.
+
+5. **Build the project**: Compile the TypeScript files into JavaScript:
+    ```bash
+    npm  run  build
+    ```
+6. **Start the server**: After building the project, start the server using:
+
+    ```bash
+    npm  start
+    ```
+
+7. **Run in Development Mode**: To run the server in development mode with automatic reloads using `nodemon` and `ts-node`, use:
+
+    ```bash
+    npm  run  dev
+    ```
 
 ### Usage
 
@@ -61,21 +102,21 @@ npm run dev
 
 -   **Linting**: Check code quality using ESLint:
 
-```bash
-npm run lint
-```
+    ```bash
+    npm  run  lint
+    ```
 
 -   **Code Formatting**: Format the codebase with Prettier:
 
-```bash
-npm run format
-```
+    ```bash
+    npm  run  format
+    ```
 
 -   **Clean Build Artifacts**: To remove the `dist` directory (where the compiled JavaScript files are stored):
 
-```bash
-npm run clean
-```
+    ```bash
+    npm  run  clean
+    ```
 
 ### Project Structure
 
@@ -93,37 +134,45 @@ We welcome contributions! To contribute, follow these steps:
 
 2.  **Clone your fork**:
 
-```bash
-git clone https://github.com/your-username/shopmate.git
+    ```bash
+    git  clone  https://github.com/your-username/shopmate.git
+    ```
 
-cd shopmate
-```
+    ```bash
+    cd  shopmate
+    ```
 
 3.  **Create a new branch**: Make sure to give your branch a descriptive name:
 
-```bash
-git checkout -b feature/your-feature-name
-```
+    ```bash
+    git  checkout  -b  feature/your-feature-name
+    ```
 
 4.  **Make your changes**.
 
 5.  **Run tests and lint**: Make sure your code passes linting and any tests before submitting a pull request:
 
-```bash
-npm run lint
+    ```bash
+    npm  run  lint
+    ```
 
-npm test
-```
+    ```bash
+    npm  test
+    ```
 
 6.  **Commit and push your changes**:
 
-```bash
-git add .
+    ```bash
+    git  add  .
+    ```
 
-git commit -m "Add a description of your changes"
+    ```bash
+    git  commit  -m  "Add a description of your changes"
+    ```
 
-git push origin feature/your-feature-name
-```
+    ```bash
+    git  push  origin  feature/your-feature-name
+    ```
 
 7.  **Create a pull request**: Go to your forked repository on GitHub, and click the "New pull request" button.
 
@@ -143,9 +192,11 @@ import { someUtil } from '@utils/someUtil';
 -   If you encounter issues with the Node version, ensure that you are using `v20.5.1`. Use `nvm` to manage Node versions:
 
 ```bash
-nvm install 20.5.1
+nvm  install  20.5.1
+```
 
-nvm use 20.5.1
+```bash
+nvm  use  20.5.1
 ```
 
 -   Make sure that `.env` is properly configured with the required environment variables, as missing variables can cause the server to fail on
@@ -154,4 +205,5 @@ nvm use 20.5.1
 ---
 
 This guide covers the essential steps to get started with `shopmate-api`, as well as details on contributing and maintaining code quality. Happy
+
 coding!
