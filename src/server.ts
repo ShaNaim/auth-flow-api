@@ -9,7 +9,7 @@ import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import cors from 'cors';
 import { createServer, Server } from 'http';
-import { CustomError } from './errors/CustomError';
+import { CustomError } from '@errors/CustomError';
 import { ErrorArgs } from '@errors/ErrorArgs';
 import { ErrorCodes } from '@errors/ErrorCodes';
 import { StatusCodes } from 'http-status-codes';
@@ -20,7 +20,7 @@ import { serverModes } from '@config/server.config';
 
 const app: Application = express();
 const server: Server = createServer(app);
-
+const initialUrl = `/v/${environment.version}`;
 function initializeMiddlewares(): void {
     app.use(cors());
     app.use(express.json());
@@ -39,7 +39,7 @@ function initializeRoutes(): void {
         res.status(StatusCodes.OK).json({ data: 'OK' });
     });
     app.use(requestLogger);
-    app.use(`/v/${environment.version}`, router);
+    app.use(initialUrl, router);
 }
 
 function initializeNetworkAccess(): void {
@@ -58,11 +58,17 @@ function initializeNetworkAccess(): void {
 
 function initializeErrorHandling(): void {
     // Intentional routes for global error handling
-    app.get('/unknown-error', (_, res, next) => {
-        next(new Error('Something wrong happened! Please try again later.'));
+    app.get(`${initialUrl}/unknown-error`, (_, res, next) => {
+        next(
+            new CustomError({
+                code: ErrorCodes.UnknownError,
+                status: StatusCodes.INTERNAL_SERVER_ERROR,
+                description: 'Something wrong happened! Please try again later.'
+            })
+        );
     });
 
-    app.get('/known-error', (_, res, next) => {
+    app.get(`${initialUrl}/known-error`, (_, res, next) => {
         return next(
             new CustomError({
                 code: ErrorCodes.NotFound,

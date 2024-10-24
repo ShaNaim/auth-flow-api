@@ -27,11 +27,16 @@ class ErrorHandler {
 
     private static handleCriticalError(error: Error | CustomError, res?: Response): Response | void {
         if (res) {
-            return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-                code: ErrorCodes.UnknownError,
-                status: StatusCodes.INTERNAL_SERVER_ERROR,
-                description: 'Something went wrong. Please try again later.'
-            } as ErrorArgs);
+            return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(
+                responseObject(
+                    {
+                        code: ErrorCodes.UnknownError,
+                        status: StatusCodes.INTERNAL_SERVER_ERROR,
+                        description: 'Something went wrong. Please try again later.'
+                    } as ErrorArgs,
+                    true
+                )
+            );
         }
 
         log.error('Application encountered a critical error. Exiting.');
