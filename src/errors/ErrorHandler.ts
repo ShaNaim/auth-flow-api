@@ -28,12 +28,12 @@ class ErrorHandler {
     private static handleCriticalError(error: Error | CustomError, res?: Response): Response | void {
         if (res) {
             return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(
-                responseObject(
+                responseObject<ErrorArgs>(
                     {
                         code: ErrorCodes.UnknownError,
                         status: StatusCodes.INTERNAL_SERVER_ERROR,
                         description: 'Something went wrong. Please try again later.'
-                    } as ErrorArgs,
+                    },
                     true
                 )
             );
