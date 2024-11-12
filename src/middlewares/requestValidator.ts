@@ -39,7 +39,7 @@ const requestValidator =
                     code: ErrorCodes.ValidationError,
                     status: StatusCodes.BAD_REQUEST,
                     description: error.message,
-                    metaData: errors
+                    data: errors
                 })
             );
         }

@@ -8,6 +8,7 @@ export class CustomError extends Error {
     public readonly description: string;
     public readonly isOperational: boolean = true;
     public readonly metaData: any = undefined;
+    public readonly data: any = undefined;
 
     public constructor(args: ErrorArgs) {
         super(args.description);
@@ -19,6 +20,7 @@ export class CustomError extends Error {
         this.code = args.code;
         this.description = args.description;
         this.metaData = args.metaData;
+        this.data = args.data;
 
         if (args.isOperational !== undefined) {
             this.isOperational = args.isOperational;

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/typedef */
 export class ErrorCodes {
     public static readonly Unauthenticated = 'Unauthenticated';
     public static readonly Unauthorized = 'Unauthorized';
