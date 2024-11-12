@@ -8,55 +8,53 @@ datasource db {
 }
 
 model User {
-  id         Int      @id @default(autoincrement())
-  email      String   @unique @db.VarChar(100)
-  password   String   @db.VarChar(255)  // For storing hashed passwords (sufficient length)
-  isActive   Boolean  @default(false)
-  isVarified Boolean  @default(false)
-  personId   Int?     @unique  // One-to-one relation to Person (optional)
-  person     Person?  @relation(fields: [personId], references: [id])  // Relating to Person model
-  tokens     Token[]  // One-to-many relation with Token model
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id         Int       @id @default(autoincrement())
+  email      String    @unique @db.VarChar(100)
+  password   String    @db.VarChar(255) // For storing hashed passwords (sufficient length)
+  isActive   Boolean   @default(false)
+  isVarified Boolean   @default(false)
+  person     Person? // Relating to Person model
+  tokens     Token[] // One-to-many relation with Token model
+  createdAt  DateTime? @default(now())
+  updatedAt  DateTime? @updatedAt
 }
 
 model Person {
-  id         Int      @id @default(autoincrement()) // Auto-incrementing ID for Person
-  firstName  String
-  lastName   String
-  phone      String   @db.VarChar(15) // Phone number, limited to 15 digits
-  address    Address? // Optional one-to-one relation with Address
-  user       User?    // One-to-one relation with User
-  createdAt  DateTime @default(now()) // Created timestamp
-  updatedAt  DateTime @updatedAt      // Automatically updated timestamp
+  id        Int       @id @default(autoincrement()) // Auto-incrementing ID for Person
+  firstName String
+  lastName  String
+  phone     String    @unique @db.VarChar(20) // Phone number, limited to 20 digits
+  address   Address? // Optional one-to-one relation with Address
+  userId    Int       @unique
+  user      User?     @relation(fields: [userId], references: [id]) // One-to-one relation with User
+  createdAt DateTime? @default(now()) // Created timestamp
+  updatedAt DateTime? @updatedAt // Automatically updated timestamp
 }
 
 model Address {
-  id         Int      @id @default(autoincrement()) // Auto-incrementing ID for Address
-  personId   Int      @unique   // Foreign key, one-to-one relation with Person
-  person     Person   @relation(fields: [personId], references: [id]) // Defining the relation
-  country    String
-  city       String
-  district   String
+  id         Int       @id @default(autoincrement()) // Auto-incrementing ID for Address
+  personId   Int?      @unique // Foreign key, one-to-one relation with Person
+  person     Person?   @relation(fields: [personId], references: [id]) // Defining the relation
   street     String
-  area       String
+  city       String
   postalCode Int
-  createdAt  DateTime @default(now()) // Created timestamp
-  updatedAt  DateTime @updatedAt      // Automatically updated timestamp
+  country    String?
+  district   String?
+  area       String?
+  createdAt  DateTime? @default(now()) // Created timestamp
+  updatedAt  DateTime? @updatedAt // Automatically updated timestamp
 }
 
 model Token {
-  id                        Int      @id @default(autoincrement()) // Auto-incrementing ID for Token
-  accessToken               String   @db.VarChar(255)  // Access token string
-  refreshToken              String   @db.VarChar(255)  // Refresh token string
-  userId                    Int      // Foreign key for User
-  user                      User     @relation(fields: [userId], references: [id])  // Relating to User
-  isActive                  Boolean  @default(true)   // If token is currently active
-  accessTokenValidityTime    DateTime // Expiration time for access token
-  refreshTokenValidityTime   DateTime // Expiration time for refresh token
-  isBlocked                 Boolean  @default(false)  // If token is blocked (e.g., due to suspicious activity)
-  createdAt                 DateTime @default(now())  // Created timestamp
-  updatedAt                 DateTime @updatedAt       // Automatically updated timestamp
+  id                       Int       @id @default(autoincrement()) // Auto-incrementing ID for Token
+  accessToken              String    @db.VarChar(255) // Access token string
+  refreshToken             String    @db.VarChar(255) // Refresh token string
+  userId                   Int // Foreign key for User
+  user                     User      @relation(fields: [userId], references: [id]) // Relating to User
+  isActive                 Boolean   @default(true) // If token is currently active
+  accessTokenValidityTime  DateTime // Expiration time for access token
+  refreshTokenValidityTime DateTime // Expiration time for refresh token
+  isBlocked                Boolean   @default(false) // If token is blocked (e.g., due to suspicious activity)
+  createdAt                DateTime? @default(now()) // Created timestamp
+  updatedAt                DateTime? @updatedAt // Automatically updated timestamp
 }
-
-
