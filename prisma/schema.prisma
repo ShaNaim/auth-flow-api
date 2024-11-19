@@ -22,7 +22,7 @@ model User {
 model Person {
   id        Int       @id @default(autoincrement()) // Auto-incrementing ID for Person
   firstName String
-  lastName  String
+  lastName  String?
   phone     String    @unique @db.VarChar(20) // Phone number, limited to 20 digits
   address   Address? // Optional one-to-one relation with Address
   userId    Int       @unique
