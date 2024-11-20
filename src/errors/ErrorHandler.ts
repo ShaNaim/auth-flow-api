@@ -5,17 +5,17 @@ import { ErrorArgs } from './ErrorArgs';
 import log from '../config/logger.config';
 import { ErrorCodes } from './ErrorCodes';
 import { responseObject } from '@utils/provider/response.provider';
+import DetermineErrorType from './DetermineErrorType';
 class ErrorHandler {
     private static isTrustedError(error: Error): boolean {
         if (error instanceof CustomError) {
             return error.isOperational;
         }
-
         return false;
     }
 
     private static handleTrustedError(error: CustomError, res: Response): Response {
-        return res.status(error.status).json(
+        return res.status(error?.status).json(
             responseObject(
                 {
                     ...error
@@ -40,14 +40,16 @@ class ErrorHandler {
         }
 
         log.error('Application encountered a critical error. Exiting.');
+        log.error(error);
         process.exit(1);
     }
 
     public handleError(error: Error, res?: Response): void {
-        if (ErrorHandler.isTrustedError(error) && res) {
-            ErrorHandler.handleTrustedError(error as CustomError, res);
+        const convertedError = new DetermineErrorType(error).convertKnowErrors();
+        if (ErrorHandler.isTrustedError(convertedError as Error) && res) {
+            ErrorHandler.handleTrustedError(convertedError as CustomError, res);
         } else {
-            ErrorHandler.handleCriticalError(error, res);
+            ErrorHandler.handleCriticalError(convertedError, res);
         }
     }
 }

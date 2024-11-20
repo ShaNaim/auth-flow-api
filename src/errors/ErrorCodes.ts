@@ -15,4 +15,15 @@ export class ErrorCodes {
     public static readonly CrudError = 'CrudError';
     public static readonly ServerBusy = 'ServerBusy';
     public static readonly CorsError = 'CorsError';
+    public static readonly TimeOut = 'TimeOut';
+
+    //Prisma errors
+    public static readonly InvalidInput = 'InvalidInput';
+    public static readonly ForeignKeyConstraintFailed = 'ForeignKeyConstraintFailed';
+    public static readonly RecordNotFound = 'RecordNotFound';
+    public static readonly NestedRecordConflict = 'NestedRecordConflict';
+    public static readonly QueryError = 'QueryError';
+    public static readonly RelationViolation = 'RelationViolation';
+    public static readonly RequiredRecordNotFound = 'RequiredRecordNotFound';
+    public static readonly DeadlockDetected = 'DeadlockDetected';
 }
