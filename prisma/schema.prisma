@@ -10,10 +10,11 @@ datasource db {
 model User {
   id         Int       @id @default(autoincrement())
   email      String    @unique @db.VarChar(100)
-  slug       String    @unique @default(uuid()) // UUID for reference
+  slug       String?   @unique @default(uuid()) // UUID for reference
   password   String    @db.VarChar(255) // For storing hashed passwords (sufficient length)
   isActive   Boolean   @default(false)
   isVarified Boolean   @default(false)
+  isBlocked  Boolean   @default(false)
   person     Person? // Relating to Person model
   tokens     Token[] // One-to-many relation with Token model
   createdAt  DateTime? @default(now())
@@ -26,7 +27,7 @@ model Person {
   lastName  String?
   phone     String    @unique @db.VarChar(20) // Phone number, limited to 20 digits
   address   Address? // Optional one-to-one relation with Address
-  slug      String    @unique @default(uuid()) // UUID for reference
+  slug      String?   @unique @default(uuid()) // UUID for reference
   userId    Int       @unique
   user      User?     @relation(fields: [userId], references: [id]) // One-to-one relation with User
   createdAt DateTime? @default(now()) // Created timestamp
@@ -37,7 +38,7 @@ model Address {
   id         Int       @id @default(autoincrement()) // Auto-incrementing ID for Address
   personId   Int?      @unique // Foreign key, one-to-one relation with Person
   person     Person?   @relation(fields: [personId], references: [id]) // Defining the relation
-  slug       String    @unique @default(uuid()) // UUID for reference
+  slug       String?   @unique @default(uuid()) // UUID for reference
   street     String
   city       String
   postalCode Int
