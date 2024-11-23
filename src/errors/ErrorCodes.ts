@@ -16,6 +16,7 @@ export class ErrorCodes {
     public static readonly ServerBusy = 'ServerBusy';
     public static readonly CorsError = 'CorsError';
     public static readonly TimeOut = 'TimeOut';
+    public static readonly ServerError = 'ServerError';
 
     //Prisma errors
     public static readonly InvalidInput = 'InvalidInput';

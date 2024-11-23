@@ -22,7 +22,6 @@ const requestValidator =
                 query: req.query,
                 params: req.params
             });
-            log.info('[validation] Schema validated.');
             next();
         } catch (error: any) {
             const errors: ValidationErrorResponse = [];

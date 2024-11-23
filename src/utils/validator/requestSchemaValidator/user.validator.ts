@@ -18,7 +18,7 @@ export const addressSchema = z.object({
 // Person Validator
 export const personSchema = z.object({
     firstName: z.string().min(1).max(255), // First name must not be empty and has a max length
-    lastName: z.string().min(1).max(255), // Last name must not be empty and has a max length
+    lastName: z.string().min(1).max(255).optional(), // Last name must not be empty and has a max length
     phone: z.string().min(7).max(15), // Phone number must be between 7 and 15 digits
     address: addressSchema.optional() // Reference the addressSchema directly
 });

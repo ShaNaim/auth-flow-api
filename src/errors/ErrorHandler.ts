@@ -15,6 +15,7 @@ class ErrorHandler {
     }
 
     private static handleTrustedError(error: CustomError, res: Response): Response {
+        log.error(`Application encountered a known error with code. ${error?.status}`);
         return res.status(error?.status).json(
             responseObject(
                 {
@@ -27,6 +28,7 @@ class ErrorHandler {
 
     private static handleCriticalError(error: Error | CustomError, res?: Response): Response | void {
         if (res) {
+            log.error(`Application encountered a Unknown error`);
             return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(
                 responseObject<ErrorArgs>(
                     {
@@ -45,6 +47,7 @@ class ErrorHandler {
     }
 
     public handleError(error: Error, res?: Response): void {
+        log.error(JSON.stringify(error, null, 2));
         const convertedError = new DetermineErrorType(error).convertKnowErrors();
         if (ErrorHandler.isTrustedError(convertedError as Error) && res) {
             ErrorHandler.handleTrustedError(convertedError as CustomError, res);
