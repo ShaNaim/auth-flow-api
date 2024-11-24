@@ -16,7 +16,7 @@ model User {
   isVarified Boolean   @default(false)
   isBlocked  Boolean   @default(false)
   person     Person? // Relating to Person model
-  tokens     Token[] // One-to-many relation with Token model
+  tokens     Session[] // One-to-many relation with Token model
   createdAt  DateTime? @default(now())
   updatedAt  DateTime? @updatedAt
 }
@@ -49,16 +49,12 @@ model Address {
   updatedAt  DateTime? @updatedAt // Automatically updated timestamp
 }
 
-model Token {
-  id                       Int       @id @default(autoincrement()) // Auto-incrementing ID for Token
-  accessToken              String    @db.VarChar(255) // Access token string
-  refreshToken             String    @db.VarChar(255) // Refresh token string
-  userId                   Int // Foreign key for User
-  user                     User      @relation(fields: [userId], references: [id]) // Relating to User
-  isActive                 Boolean   @default(true) // If token is currently active
-  accessTokenValidityTime  DateTime // Expiration time for access token
-  refreshTokenValidityTime DateTime // Expiration time for refresh token
-  isBlocked                Boolean   @default(false) // If token is blocked (e.g., due to suspicious activity)
-  createdAt                DateTime? @default(now()) // Created timestamp
-  updatedAt                DateTime? @updatedAt // Automatically updated timestamp
+model Session {
+  id        Int       @id @default(autoincrement()) // Auto-incrementing ID for Token
+  userId    Int // Foreign key for User
+  user      User      @relation(fields: [userId], references: [id]) // Relating to User
+  isActive  Boolean   @default(true) // If token is currently active
+  isBlocked Boolean   @default(false) // If token is blocked (e.g., due to suspicious activity)
+  createdAt DateTime? @default(now()) // Created timestamp
+  updatedAt DateTime? @updatedAt // Automatically updated timestamp
 }
