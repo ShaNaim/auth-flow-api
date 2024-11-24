@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import jwt from 'jsonwebtoken';
 import * as argon2 from 'argon2';
 import { StatusCodes } from 'http-status-codes';
-import { User } from '@prisma/client';
+import { Session, User } from '@prisma/client';
 
 import log from '@config/logger.config';
 import { ErrorCodes } from '@errors/ErrorCodes';
@@ -11,7 +11,7 @@ import config, { tokenTypes } from '@config/config';
 import { IJwtPrivateKey, IJwtPublicKey, IJwtPayload } from '@utils/types';
 import { LoginSchema } from '@utils/validator/requestSchemaValidator/authentication.validator';
 
-import { getUserForAuthentication } from './auth.model';
+import { getUserForAuthentication, createSession } from './auth.model';
 
 function getToken(payload: object, keyName: IJwtPrivateKey, minutes: number | undefined = undefined) {
     const options: jwt.SignOptions = {
@@ -19,17 +19,16 @@ function getToken(payload: object, keyName: IJwtPrivateKey, minutes: number | un
     };
 
     if (minutes) {
-        const oneMin = 60000;
-        options.expiresIn = minutes * oneMin;
+        options.expiresIn = minutes;
     }
     return jwt.sign(payload, getKey(keyName), options);
 }
 
 function getKey(keyName: IJwtPrivateKey | IJwtPublicKey): string {
     if (tokenTypes.access_token_private_key === keyName) return String(config.access_token_private_key);
-    if (tokenTypes.access_token_public_key === keyName) return config.access_token_public_key;
-    if (tokenTypes.refresh_token_private_key === keyName) return config.refresh_token_private_key;
-    if (tokenTypes.refresh_token_public_key === keyName) return config.refresh_token_public_key;
+    if (tokenTypes.access_token_public_key === keyName) return String(config.access_token_public_key);
+    if (tokenTypes.refresh_token_private_key === keyName) return String(config.refresh_token_private_key);
+    if (tokenTypes.refresh_token_public_key === keyName) return String(config.refresh_token_public_key);
     throw new CustomError({
         code: ErrorCodes.ServerError,
         status: StatusCodes.INTERNAL_SERVER_ERROR,
@@ -42,7 +41,7 @@ function getKey(keyName: IJwtPrivateKey | IJwtPublicKey): string {
     });
 }
 
-function signAccessToken(user: User, minutes: number = 20): string | undefined {
+function signAccessToken(user: User): string | undefined {
     const payload: IJwtPayload = {
         sub: user.id,
         email: user.email,
@@ -51,15 +50,26 @@ function signAccessToken(user: User, minutes: number = 20): string | undefined {
         audience: 'shopmate-sha'
     };
 
-    return getToken(payload, tokenTypes.access_token_private_key as IJwtPrivateKey, minutes);
+    return getToken(payload, tokenTypes.access_token_private_key as IJwtPrivateKey, Number(config.access_token_valid_time));
 }
 
 function signRefreshToken(user: User): string | undefined {
-    return getToken({ session: user.id.toString(), iat: new Date().getTime() }, tokenTypes.refresh_token_private_key as IJwtPrivateKey);
+    return getToken(
+        { session: user.id.toString(), iat: new Date().getTime() },
+        tokenTypes.refresh_token_private_key as IJwtPrivateKey,
+        Number(config.refresh_token_valid_time)
+    );
 }
 
-export function getSignedTokens(user: User, minutes: number = 20) {
-    return { accessToken: signAccessToken(user, minutes), refreshToken: signRefreshToken(user) };
+export function getSignedTokens(user: User): { accessToken: string | undefined; refreshToken: string | undefined } {
+    return {
+        accessToken: signAccessToken(user),
+        refreshToken: signRefreshToken(user)
+    };
+}
+
+export async function generateSession(user: User): Promise<Session> {
+    return await createSession(user.id);
 }
 
 export async function hashString(value: string): Promise<string> {

@@ -5,7 +5,7 @@ import { RequestType } from '@utils/types';
 import userServices from '@modules/user/user';
 import { gracefulErrorHandler } from '@errors/ErrorHandler';
 import { CustomError } from '@errors/CustomError';
-import authServices, { getSignedTokens } from './auth.service';
+import authServices, { getSignedTokens, generateSession } from './auth.service';
 import { ErrorCodes } from '@errors/ErrorCodes';
 import { StatusCodes } from 'http-status-codes';
 
@@ -38,7 +38,30 @@ export async function loginController(req: RequestType<LoginSchema, unknown, unk
             });
         }
         const { accessToken, refreshToken } = getSignedTokens(user);
+        if (!accessToken || !refreshToken)
+            new CustomError({
+                code: ErrorCodes.ServerError,
+                status: StatusCodes.INTERNAL_SERVER_ERROR,
+                description: 'Something went wrong',
+                data: {
+                    path: ['login', 'getSignedTokens', 'accessToken', 'refreshToken'],
+                    message: `No ${accessToken ?? 'accessToken'} ${refreshToken ?? 'refreshToken'} found`
+                },
+                isOperational: false
+            });
 
+        const session = await generateSession(user);
+        if (!session)
+            new CustomError({
+                code: ErrorCodes.ServerError,
+                status: StatusCodes.INTERNAL_SERVER_ERROR,
+                description: 'Something went wrong',
+                data: {
+                    path: ['login', 'generateSession', 'session'],
+                    message: `No session Found`
+                },
+                isOperational: false
+            });
         res.status(200).json(responseObject({ email: user?.email, slug: user?.slug, accessToken, refreshToken }, false));
     } catch (error) {
         gracefulErrorHandler.handleError(error as Error, res);

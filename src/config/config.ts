@@ -11,7 +11,7 @@ export const tokenTypes = {
     refresh_token_private_key: 'refresh_token_private_key'
 };
 
-export const server = {};
+const miliseconds_in_minites = 60000;
 
 export default {
     port: process.env.PORT || 3060,
@@ -19,8 +19,11 @@ export default {
     host_name: process.env.HOSTNAME,
     mode: process.env.NODE_ENV,
     version: process.env.API_VERSION,
-    access_token_public_key: process.env.ACCESS_TOKEN_PUBLIC_KEY || 'a',
-    access_token_private_key: process.env.ACCESS_TOKEN_PRIVATE_KEY || 'a',
-    refresh_token_public_key: process.env.REFRESH_TOKEN_PUBLIC_KEY || 'a',
-    refresh_token_private_key: process.env.REFRESH_TOKEN_PRIVATE_KEY || 'a'
+
+    access_token_public_key: process.env.ACCESS_TOKEN_PUBLIC_KEY,
+    access_token_private_key: process.env.ACCESS_TOKEN_PRIVATE_KEY,
+    refresh_token_public_key: process.env.REFRESH_TOKEN_PUBLIC_KEY,
+    refresh_token_private_key: process.env.REFRESH_TOKEN_PRIVATE_KEY,
+    access_token_valid_time: Number(process.env.ACCESS_TOKEN_VALID_TIME) * miliseconds_in_minites,
+    refresh_token_valid_time: Number(process.env.REFRESH_TOKEN_VALID_TIME) * miliseconds_in_minites
 };
