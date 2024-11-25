@@ -22,7 +22,6 @@ const requestValidator =
                 query: req.query,
                 params: req.params
             });
-            log.info('[validation] Schema validated.');
             next();
         } catch (error: any) {
             const errors: ValidationErrorResponse = [];
@@ -39,7 +38,7 @@ const requestValidator =
                     code: ErrorCodes.ValidationError,
                     status: StatusCodes.BAD_REQUEST,
                     description: error.message,
-                    metaData: errors
+                    data: errors
                 })
             );
         }

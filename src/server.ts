@@ -17,6 +17,7 @@ import router from './routes';
 import { requestLogger } from '@utils/provider/log.provider';
 import os from 'os';
 import { serverModes } from '@config/server.config';
+import { tokenHandler } from '@middlewares/tokenHandler';
 
 const app: Application = express();
 const server: Server = createServer(app);
@@ -28,6 +29,7 @@ function initializeMiddlewares(): void {
     app.use(compression());
     app.use(cookieParser());
     app.set('trust proxy', true);
+    app.use(tokenHandler);
 }
 
 function initializeHelmet(): void {

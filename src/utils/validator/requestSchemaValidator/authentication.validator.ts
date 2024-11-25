@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { userSchema, personSchema, addressSchema } from './user.validator';
+import { addressSchema } from './user.validator';
 
 // Token Validator
 export const tokenSchema = z.object({
@@ -12,25 +12,31 @@ export const tokenSchema = z.object({
     isBlocked: z.boolean().default(false) // Default value for isBlocked
 });
 
-export const registerSchema = z.object({
-    body: z.object({
-        email: z.string().email().max(40), // Email validation
-        password: z.string().min(8).max(255), // Password length between 8 and 255
-        firstName: z.string().min(1).max(255), // First name must not be empty and has a max length
-        lastName: z.string().min(1).max(255).optional(), // Last name must not be empty and has a max length
-        phone: z.string().min(7).max(15), // Phone number must be between 7 and 15 digits
-        address: addressSchema.optional() // Reference the addressSchema directly
-    })
+const registerSchema = z.object({
+    email: z.string().email().max(40), // Email validation
+    password: z.string().min(8).max(255), // Password length between 8 and 255
+    firstName: z.string().min(1).max(255), // First name must not be empty and has a max length
+    lastName: z.string().min(1).max(255).optional(), // Last name must not be empty and has a max length
+    phone: z.string().min(7).max(15), // Phone number must be between 7 and 15 digits
+    address: addressSchema.optional() // Reference the addressSchema directly
+});
+
+export const registerInputSchema = z.object({
+    body: registerSchema
 });
 
 export const loginSchema = z.object({
-    body: z.object({
-        email: z.string().email().max(40), // Email validation
-        password: z.string().max(255) // Password maximum 255 char
-    })
+    email: z.string().email().max(40), // Email validation
+    password: z.string().max(255) // Password maximum 255 char
+});
+export const loginInputSchema = z.object({
+    body: loginSchema
 });
 
 // Type for Registration Data
-export type RegisterInputSchema = z.infer<typeof registerSchema>;
+export type RegisterInputSchema = z.infer<typeof registerInputSchema>;
+export type RegisterSchema = z.infer<typeof registerSchema>;
+
 export type TokenInputSchema = z.infer<typeof tokenSchema>;
-export type LoginInputSchema = z.infer<typeof loginSchema>;
+export type LoginInputSchema = z.infer<typeof loginInputSchema>;
+export type LoginSchema = z.infer<typeof loginSchema>;

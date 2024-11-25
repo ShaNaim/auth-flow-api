@@ -1,9 +1,9 @@
 import express, { Router } from 'express';
 import { healthCheckController, systemCheckController } from './health.controller';
+import { tokenRequired } from '@middlewares/tokenHandler';
 const healthRouter: Router = express.Router();
 
 healthRouter.get('/', healthCheckController);
-//TODO: make this route Protected
-healthRouter.get('/system', systemCheckController);
+healthRouter.get('/system', tokenRequired, systemCheckController);
 
 export default healthRouter;

@@ -17,8 +17,9 @@
             "@modules/*": ["src/modules/*"],
             "@utils/*": ["src/utils/*"],
             "@provider/*": ["src/utils/provider/*"]
-        }
+        },
+        "typeRoots": ["./src/utils/types"]
     },
     "exclude": ["node_modules/", "dist/**/*"],
-    "include": ["src/**/*.ts"]
+    "include": ["src/**/*.ts", "eslint.config.mjs"]
 }

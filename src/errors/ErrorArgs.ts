@@ -7,4 +7,5 @@ export interface ErrorArgs {
     description: string;
     isOperational?: boolean;
     metaData?: any;
+    data?: any;
 }

@@ -11,6 +11,7 @@ import { gracefulErrorHandler } from '@errors/ErrorHandler';
  * @param res - The response object
  * @param next - The next function
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const errorHandler = (err: Error, req: Request, res: Response, next: NextFunction): void => {
     log.error('[error] catch in global middleware.');
     log.info(`[error] Path: ${req.path}`);
