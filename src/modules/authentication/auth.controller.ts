@@ -1,13 +1,14 @@
 import { Request, Response } from 'express';
+import { StatusCodes } from 'http-status-codes';
 import { responseObject } from '@provider/response.provider';
+import { ErrorCodes } from '@errors/ErrorCodes';
 import { RegisterSchema, LoginSchema } from '@utils/validator/requestSchemaValidator/authentication.validator';
 import { RequestType } from '@utils/types';
 import userServices from '@modules/user/user';
 import { gracefulErrorHandler } from '@errors/ErrorHandler';
 import { CustomError } from '@errors/CustomError';
-import authServices, { getSignedTokens, generateSession } from './auth.service';
-import { ErrorCodes } from '@errors/ErrorCodes';
-import { StatusCodes } from 'http-status-codes';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import authServices, { getSignedTokens, handleSession } from './auth.service';
 
 export function healthController(req: Request, res: Response) {
     res.status(200).json(
@@ -27,7 +28,7 @@ export async function loginController(req: RequestType<LoginSchema, unknown, unk
         const body = req?.body;
         const user = await authServices.authenticateUser(body);
         if (!Boolean(user)) {
-            new CustomError({
+            throw new CustomError({
                 code: ErrorCodes.UnknownError,
                 status: StatusCodes.INTERNAL_SERVER_ERROR,
                 description: 'Something went wrong',
@@ -39,7 +40,7 @@ export async function loginController(req: RequestType<LoginSchema, unknown, unk
         }
         const { accessToken, refreshToken } = getSignedTokens(user);
         if (!accessToken || !refreshToken)
-            new CustomError({
+            throw new CustomError({
                 code: ErrorCodes.ServerError,
                 status: StatusCodes.INTERNAL_SERVER_ERROR,
                 description: 'Something went wrong',
@@ -49,19 +50,20 @@ export async function loginController(req: RequestType<LoginSchema, unknown, unk
                 },
                 isOperational: false
             });
+        //TODO: Off till Multi-tenancy System implemented
+        // const session = await handleSession(user);
 
-        const session = await generateSession(user);
-        if (!session)
-            new CustomError({
-                code: ErrorCodes.ServerError,
-                status: StatusCodes.INTERNAL_SERVER_ERROR,
-                description: 'Something went wrong',
-                data: {
-                    path: ['login', 'generateSession', 'session'],
-                    message: `No session Found`
-                },
-                isOperational: false
-            });
+        // if (!Boolean(session))
+        //     throw new CustomError({
+        //         code: ErrorCodes.ServerError,
+        //         status: StatusCodes.INTERNAL_SERVER_ERROR,
+        //         description: 'Something went wrong',
+        //         data: {
+        //             path: ['login', 'generateSession', 'session'],
+        //             message: `No session Found`
+        //         },
+        //         isOperational: false
+        //     });
         res.status(200).json(responseObject({ email: user?.email, slug: user?.slug, accessToken, refreshToken }, false));
     } catch (error) {
         gracefulErrorHandler.handleError(error as Error, res);
@@ -76,4 +78,8 @@ export async function reginsterController(req: RequestType<RegisterSchema, unkno
     } catch (error) {
         gracefulErrorHandler.handleError(error as Error, res);
     }
+}
+
+export function logoutController(req: Request, res: Response) {
+    res.status(200).json(responseObject('logout successful', false));
 }

@@ -26,3 +26,43 @@ export async function createSession(userId: IdType<User>): Promise<Session> {
     });
     return newSession ?? null;
 }
+
+export async function updateSession(sessionId: IdType<Session>, sessionData: Partial<{ isActive: boolean; isBlocked: boolean }>) {
+    return await prisma.session.update({
+        where: {
+            id: sessionId // Ensure that `userId` is unique in the Prisma schema
+        },
+        data: {
+            isActive: sessionData.isActive ?? undefined, // Update only if provided
+            isBlocked: sessionData.isBlocked ?? undefined // Update only if provided
+        }
+    });
+}
+
+export async function findSessionsByUserId(userId: IdType<User>): Promise<Array<Session>> {
+    return (
+        (await prisma.session.findMany({
+            where: {
+                userId
+            }
+        })) ?? null
+    );
+}
+
+export async function deleteSessionsByUserId(userId: IdType<User>) {
+    return (
+        (await prisma.session.deleteMany({
+            where: {
+                userId
+            }
+        })) ?? null
+    );
+}
+
+export async function deleteSessionsById(id: number) {
+    return await prisma.session.delete({
+        where: {
+            id
+        }
+    });
+}

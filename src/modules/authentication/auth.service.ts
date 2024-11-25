@@ -11,7 +11,7 @@ import config, { tokenTypes } from '@config/config';
 import { IJwtPrivateKey, IJwtPublicKey, IJwtPayload } from '@utils/types';
 import { LoginSchema } from '@utils/validator/requestSchemaValidator/authentication.validator';
 
-import { getUserForAuthentication, createSession } from './auth.model';
+import * as authModel from './auth.model';
 
 function getToken(payload: object, keyName: IJwtPrivateKey, minutes: number | undefined = undefined) {
     const options: jwt.SignOptions = {
@@ -68,8 +68,17 @@ export function getSignedTokens(user: User): { accessToken: string | undefined; 
     };
 }
 
+export async function handleSession(user: User): Promise<Session> {
+    const hasSession = await authModel.findSessionsByUserId(user?.id);
+    if (hasSession.length !== 0) {
+        //TODO: Implement Multi-tenancy and handle Accoudingly
+        return hasSession[0];
+    }
+    return await authModel.createSession(user.id);
+}
+
 export async function generateSession(user: User): Promise<Session> {
-    return await createSession(user.id);
+    return await authModel.createSession(user.id);
 }
 
 export async function hashString(value: string): Promise<string> {
@@ -84,13 +93,12 @@ export async function compairHash(compare: string, target: string): Promise<bool
         return false;
     }
 }
-
-export async function generaSession(value: string): Promise<string> {
-    return await argon2.hash(value);
+export function verifyToken<T>(token: string, keyName: IJwtPublicKey): T | undefined {
+    return jwt.verify(token, getKey(keyName)) as T;
 }
 
 export async function authenticateUser(attemptUser: LoginSchema): Promise<User> {
-    const userExists = await getUserForAuthentication(attemptUser?.email);
+    const userExists = await authModel.getUserForAuthentication(attemptUser?.email);
     if (!userExists)
         throw new CustomError({
             code: ErrorCodes.NotFound,
@@ -125,5 +133,5 @@ export async function authenticateUser(attemptUser: LoginSchema): Promise<User> 
     return userExists;
 }
 
-const authServices = { hashString, compairHash, authenticateUser };
+const authServices = { hashString, compairHash, authenticateUser, verifyToken };
 export default authServices;
