@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import os from 'os';
 import { responseObject } from '@provider/response.provider';
 import { Uptime } from '@utils/types/server.types';
-
+import { millisecondsToStrAI } from '@utils/handle-format';
 export function healthCheckController(req: Request, res: Response) {
     res.status(200).json(
         responseObject(
@@ -29,13 +29,8 @@ export function systemCheckController(_: Request, res: Response) {
 }
 
 function getTotalUptime(): Uptime {
-    const uptimeInSeconds = os.uptime();
-    const hours = Math.floor(uptimeInSeconds / 3600);
-    const minutes = Math.floor((uptimeInSeconds % 3600) / 60);
-    const seconds = Math.floor(uptimeInSeconds % 60);
-    const formattedUptime = `${hours} hr ${minutes} min ${seconds} sec`;
     return {
-        original: uptimeInSeconds,
-        formattedUptime
+        original: os.uptime(),
+        formattedUptime: millisecondsToStrAI(os.uptime())
     };
 }
