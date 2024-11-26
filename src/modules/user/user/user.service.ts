@@ -7,9 +7,9 @@ import { userModel } from './user.model';
 import { userQuery } from '@utils/provider';
 // import handleError from '@errors/error.handler';
 
-export async function createUserService(payload: CreateUserInputDTO): Promise<Omit<CreateUserDTO, 'password'>> {
+export async function createUserService(payload: CreateUserInputDTO, details: boolean = true): Promise<Omit<CreateUserDTO, 'password'>> {
     try {
-        return await userModel.createUser(payload, userQuery(true));
+        return await userModel.createUser(payload, userQuery(details));
     } catch (error) {
         throw error;
     }
