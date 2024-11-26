@@ -13,9 +13,10 @@ export type UserQueryOptions = {
 export interface CreateUserInputDTO extends UserInputSchema, PersonInputSchema {}
 export interface CreateUserDTO extends Partial<UserInputSchema>, Partial<PersonInputSchema> {}
 
-export interface UpdateUserDTO extends UserInputSchema {
+export interface UpdateUserDTO extends Prisma.UserUpdateInput {
     id: number;
 }
+
 export type UserDTO = User & {
     person?:
         | (Omit<Person, 'userId' | 'user'> & {

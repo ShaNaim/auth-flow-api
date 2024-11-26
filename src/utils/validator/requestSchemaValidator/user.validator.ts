@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { getBySlugSchema } from './request.validator';
 // User Validator
 export const userSchema = z.object({
     email: z.string().email().max(40), // Email validation
@@ -23,6 +24,16 @@ export const personSchema = z.object({
     address: addressSchema.optional() // Reference the addressSchema directly
 });
 
+export const updateUserSchema = personSchema.partial().strict();
+
+export const updateUserInputSchema = z.object({
+    body: updateUserSchema,
+    params: getBySlugSchema
+});
+
 export type UserInputSchema = z.infer<typeof userSchema>;
 export type PersonInputSchema = z.infer<typeof personSchema>;
 export type AddressInputSchema = z.infer<typeof addressSchema>;
+
+export type UpdateUserInputSchema = z.infer<typeof updateUserInputSchema>;
+export type UpdateUserSchema = z.infer<typeof updateUserSchema>;
