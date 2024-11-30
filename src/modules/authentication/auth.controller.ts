@@ -83,3 +83,38 @@ export async function reginsterController(req: RequestType<RegisterSchema, unkno
 export function logoutController(req: Request, res: Response) {
     res.status(200).json(responseObject('logout successful', false));
 }
+
+export async function blockUserController(req: Request, res: Response) {
+    try {
+        const existingUser = await authServices.userExists(req?.params?.slug);
+        if (!existingUser) {
+            throw new CustomError({
+                code: ErrorCodes.NotFound,
+                status: StatusCodes.NOT_FOUND,
+                description: `No User Found`,
+                data: `No User with provided credential exists`
+            });
+        }
+
+        const newBlockedStatus = !existingUser.isBlocked;
+        const updatedUser = await userServices.updateUser({
+            id: existingUser.id,
+            isBlocked: newBlockedStatus
+        });
+
+        if (!updatedUser) {
+            throw new CustomError({
+                code: ErrorCodes.CrudError,
+                status: StatusCodes.INTERNAL_SERVER_ERROR,
+                description: `An unexpected error occurred.`,
+                data: `Something went wrong, please try again.`
+            });
+        }
+
+        const message = `User with credential: ${req.params.slug} has been ${newBlockedStatus ? 'Blocked' : 'Unblocked'}`;
+
+        res.status(200).json(responseObject({ message }));
+    } catch (error) {
+        gracefulErrorHandler.handleError(error as Error, res);
+    }
+}

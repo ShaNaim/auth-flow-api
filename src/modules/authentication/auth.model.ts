@@ -2,18 +2,25 @@ import { PrismaClient, Session, User } from '@prisma/client';
 import { IdType } from '@utils/types';
 
 const prisma = new PrismaClient();
+
 export async function getUserForAuthentication(email: string): Promise<User | null> {
-    try {
-        const user = await prisma.user.findUnique({
-            where: { email: email },
-            include: {
-                person: true
-            }
-        });
-        return user ?? null;
-    } catch (error) {
-        throw error;
-    }
+    const user = await prisma.user.findUnique({
+        where: { email: email },
+        include: {
+            person: true
+        }
+    });
+    return user ?? null;
+}
+
+export async function getUserBySlug(slug: string): Promise<User | null> {
+    const user = await prisma.user.findUnique({
+        where: { slug: slug },
+        include: {
+            person: true
+        }
+    });
+    return user ?? null;
 }
 
 export async function createSession(userId: IdType<User>): Promise<Session> {
