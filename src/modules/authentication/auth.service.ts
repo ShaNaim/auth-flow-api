@@ -133,5 +133,9 @@ export async function authenticateUser(attemptUser: LoginSchema): Promise<User> 
     return userExists;
 }
 
-const authServices = { hashString, compairHash, authenticateUser, verifyToken };
+export async function userExists(slug: string): Promise<User | null> {
+    return await authModel.getUserBySlug(slug);
+}
+
+const authServices = { hashString, compairHash, authenticateUser, verifyToken, userExists };
 export default authServices;

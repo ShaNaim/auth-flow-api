@@ -6,7 +6,7 @@ features, with development tools for linting, formatting, and maintaining code q
 
 ### Prerequisites
 
--   **Node.js**: `v20.5.1`
+-   **Node.js**: `v20.16.0`
 
 -   **npm**: `>=10.8.2`
 
@@ -189,14 +189,14 @@ import { someUtil } from '@utils/someUtil';
 
 ### Troubleshooting
 
--   If you encounter issues with the Node version, ensure that you are using `v20.5.1`. Use `nvm` to manage Node versions:
+-   If you encounter issues with the Node version, ensure that you are using `v20.16.0`. Use `nvm` to manage Node versions:
 
 ```bash
-nvm  install  20.5.1
+nvm  install  20.16.0
 ```
 
 ```bash
-nvm  use  20.5.1
+nvm  use  20.16.0
 ```
 
 -   Make sure that `.env` is properly configured with the required environment variables, as missing variables can cause the server to fail on

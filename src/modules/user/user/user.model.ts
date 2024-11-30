@@ -52,7 +52,11 @@ async function updateUser(id: UserIdType, userPayload: Prisma.UserUpdateInput): 
                 }
             });
         return await prisma.user.update({
-            data: userPayload,
+            data: {
+                email: userPayload?.email ?? userPayload.email,
+                password: userPayload?.password ?? userPayload.password,
+                isBlocked: userPayload?.isBlocked ?? !userPayload?.isBlocked
+            },
             where: { id: id }
         });
     } catch (error) {
