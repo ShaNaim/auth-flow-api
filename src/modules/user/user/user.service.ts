@@ -90,10 +90,10 @@ export async function getUser(query: Prisma.UserWhereUniqueInput): Promise<UserD
     }
 }
 
-export async function getAllUsers(details: boolean): Promise<Array<UserDTO>> {
+export async function getAllUsers(details: boolean = true): Promise<Array<UserDTO>> {
     return await userModel.getAllUsers(generateUserQuery(details));
 }
 
 // Services has can be accessed from outside modules
-const userServices = { updateUser, getUserInfobySlug, createUserService, getUserbyEmail };
+const userServices = { updateUser, getUserInfobySlug, createUserService, getUserbyEmail, getAllUsers };
 export default userServices;

@@ -46,7 +46,6 @@ export async function updateUserController(req: RequestType<UpdateUserSchema, Sl
             let person;
             let address;
             const details = req?.query?.details || null;
-            console.log({ details });
             if (!user?.person?.slug)
                 throw new CustomError({
                     code: ErrorCodes.NotFound,
@@ -82,7 +81,6 @@ export async function updateUserController(req: RequestType<UpdateUserSchema, Sl
             res.status(204).json(responseObject('updated', false));
         }
     } catch (error) {
-        console.log(error);
         gracefulErrorHandler.handleError(error as Error, res);
     }
 }
@@ -143,9 +141,14 @@ export async function blockUser(req: RequestType<unknown, SlugSchema, unknown>, 
                     description: `An unexpected error occurred.`,
                     data: `Something went wrong please try again`
                 });
-            res.status(204).json(responseObject({ message: `User with credential : ${req?.params?.slug} was blocked` }, false));
+            res.status(204).json(responseObject({ message: `User with credential : ${req?.params?.slug} has been blocked` }, false));
         }
     } catch (error) {
         gracefulErrorHandler.handleError(error as Error, res);
     }
+}
+
+export async function getAllUsersController(req: Request, res: Response) {
+    const usersList = await userServices.getAllUsers();
+    res.status(200).json(responseObject(usersList));
 }
