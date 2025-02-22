@@ -1,10 +1,10 @@
-# Shopmate API
+# 🔐AuthFlow API
 
-The `shopmate-api` is a TypeScript-based Express application designed for building an e-commerce platform. It uses modern JavaScript and TypeScript
+The `auth-flow-api` is a TypeScript-based Express application designed for building an Authentication. It uses modern JavaScript and TypeScript
 
 features, with development tools for linting, formatting, and maintaining code quality.
 
-### Prerequisites
+### Prerequisites 🧾
 
 -   **Node.js**: `v20.16.0`
 
@@ -14,16 +14,16 @@ features, with development tools for linting, formatting, and maintaining code q
 
 managing Node.js versions.
 
-### Installation
+### Installation 📦
 
 1.  **Clone the repository**:
 
 ```bash
-git  clone  https://github.com/ShaNaim/shopmate.git
+git  clone https://github.com/ShaNaim/auth-flow.git
 ```
 
 ```bash
-cd  shopmate
+cd  auth-flow
 ```
 
 2.  **Install dependencies**: Make sure to install both the development and production dependencies:
@@ -65,13 +65,13 @@ npm  install
         ```
 
         ```sql
-        # Create a new database for ShopMate
-        CREATE DATABASE shopmate;
+        # Create a new database for AuthFlow
+        CREATE DATABASE AuthFlow;
         ```
 
     - **Configure Prisma**:
         - **Set `DATABASE_URL` in the `.env` file**: Replace the `DATABASE_URL` in your `.env` with the connection URL for PostgreSQL. For example:
-          `env DATABASE_URL="postgresql://user:password@localhost:5432/shopmate" `
+          `env DATABASE_URL="postgresql://user:password@localhost:5432/auth-flow" `
         - **Run Prisma Migrations**: After configuring the database, run Prisma migrations to create the necessary tables:
             ```bash
             npx prisma migrate dev --name init
@@ -94,7 +94,7 @@ npm  install
     npm  run  dev
     ```
 
-### Usage
+### Usage 🛫
 
 -   **Development Server**: Running `npm run dev` will start the server with hot reloading, making it easier for development.
 
@@ -118,7 +118,7 @@ npm  install
     npm  run  clean
     ```
 
-### Project Structure
+### Project Structure 🏗️
 
 -   `src/`: Main source folder containing the TypeScript files.
 
@@ -126,20 +126,20 @@ npm  install
 
 -   `@config`, `@middlewares`, `@modules`, `@utils`, etc.: These are module aliases to simplify imports in your TypeScript code.
 
-### Contributing
+### Contributing 🤝
 
 We welcome contributions! To contribute, follow these steps:
 
-1.  **Fork the repository**: Click the "Fork" button at the top of the [GitHub repository](https://github.com/ShaNaim/shopmate).
+1.  **Fork the repository**: Click the "Fork" button at the top of the [GitHub repository](https://github.com/ShaNaim/auth-flow).
 
 2.  **Clone your fork**:
 
     ```bash
-    git  clone  https://github.com/your-username/shopmate.git
+    git  clone  https://github.com/ShaNaim/auth-flow.git
     ```
 
     ```bash
-    cd  shopmate
+    cd  auth-flow
     ```
 
 3.  **Create a new branch**: Make sure to give your branch a descriptive name:
@@ -187,9 +187,13 @@ We welcome contributions! To contribute, follow these steps:
 import { someUtil } from '@utils/someUtil';
 ```
 
+-   **RSA Token Pair Generator**: rsa-token-pair-generator is an RSA token generator required for JWT authentication. This package follows the
+    structure necessary for this project by default.
+    [![npm version](https://img.shields.io/npm/v/rsa-token-pair-generator)](https://www.npmjs.com/package/rsa-token-pair-generator)
+
 ### Troubleshooting
 
--   If you encounter issues with the Node version, ensure that you are using `v20.16.0`. Use `nvm` to manage Node versions:
+-   If you encounter issues with the Node version, ensure that you are using atleas `v20.16.0`. Use `nvm` to manage Node versions:
 
 ```bash
 nvm  install  20.16.0
@@ -204,6 +208,12 @@ nvm  use  20.16.0
 
 ---
 
-This guide covers the essential steps to get started with `shopmate-api`, as well as details on contributing and maintaining code quality. Happy
+This guide covers the essential steps to get started with `auth-flow-api`, as well as details on contributing and maintaining code quality. Happy
 
 coding!
+
+## License 📄
+
+MIT License - See [LICENSE](https://github.com/ShaNaim/auth-flow-api/blob/main/LICENSE) for full text.
+
+---
