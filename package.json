@@ -1,5 +1,5 @@
 {
-    "name": "shopmate-api",
+    "name": "auth-flow-api",
     "version": "1.0.0",
     "main": "src/server.ts",
     "scripts": {
@@ -12,6 +12,7 @@
         "lint": "eslint . --ext .ts",
         "format": "prettier --write",
         "format-db": "prisma format",
+        "token": "generate-token --keyDir off --log off",
         "check-node": "node -e \"process.exit(process.version === 'v20.16.0' ? 0 : 1)\""
     },
     "engines": {
@@ -44,6 +45,7 @@
         "eslint-config-prettier": "^9.1.0",
         "eslint-plugin-import": "^2.31.0",
         "eslint-plugin-promise": "^7.1.0",
+        "jwt-token-pair-generator": "^0.0.6",
         "lint-staged": "^15.2.10",
         "nodemon": "^3.1.7",
         "prettier": "^3.3.3",
