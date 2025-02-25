@@ -3,7 +3,7 @@ import express, { Application, Request, Response } from 'express';
 import errorHandler from '@middlewares/errorHandler';
 import environment from '@config/config';
 import hpp from 'hpp';
-import log from '@config/logger.config';
+import log, { requestIdMiddleware, responseLogger, requestLogger, errorLogger } from '@config/logger.config';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
@@ -14,14 +14,14 @@ import { ErrorArgs } from '@errors/ErrorArgs';
 import { ErrorCodes } from '@errors/ErrorCodes';
 import { StatusCodes } from 'http-status-codes';
 import router from './routes';
-import { requestLogger } from '@utils/provider/log.provider';
 import os from 'os';
 import { serverModes } from '@config/server.config';
 import { tokenHandler } from '@middlewares/tokenHandler';
 
 const app: Application = express();
 const server: Server = createServer(app);
-const initialUrl = `/v/${environment.version}`;
+const initialUrl = `/api/v/${environment.version}`;
+
 function initializeMiddlewares(): void {
     app.use(cors());
     app.use(express.json());
@@ -30,6 +30,9 @@ function initializeMiddlewares(): void {
     app.use(cookieParser());
     app.set('trust proxy', true);
     app.use(tokenHandler);
+    app.use(requestIdMiddleware);
+    app.use(responseLogger);
+    app.use(requestLogger);
 }
 
 function initializeHelmet(): void {
@@ -37,10 +40,10 @@ function initializeHelmet(): void {
 }
 
 function initializeRoutes(): void {
-    app.get('/', (req, res) => {
+    app.get('/', (_, res) => {
         res.status(StatusCodes.OK).json({ data: 'OK' });
     });
-    app.use(requestLogger);
+    // app.use(requestLogger);
     app.use(initialUrl, router);
 }
 
@@ -60,7 +63,7 @@ function initializeNetworkAccess(): void {
 
 function initializeErrorHandling(): void {
     // Intentional routes for global error handling
-    app.get(`${initialUrl}/unknown-error`, (_, res, next) => {
+    app.get(`${initialUrl}/unknown-error`, (_, __, next) => {
         next(
             new CustomError({
                 code: ErrorCodes.UnknownError,
@@ -70,7 +73,7 @@ function initializeErrorHandling(): void {
         );
     });
 
-    app.get(`${initialUrl}/known-error`, (_, res, next) => {
+    app.get(`${initialUrl}/known-error`, (_, __, next) => {
         return next(
             new CustomError({
                 code: ErrorCodes.NotFound,
@@ -97,6 +100,7 @@ function initializeErrorHandling(): void {
         };
         res.status(StatusCodes.NOT_FOUND).json(errorResponse);
     });
+    app.use(errorLogger);
 }
 
 function listen(): void {

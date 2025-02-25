@@ -89,7 +89,8 @@ export async function compairHash(compare: string, target: string): Promise<bool
     try {
         return await argon2.verify(compare, target);
     } catch (error) {
-        log.error(error, 'Could not verify password');
+        log.error('Could not verify password', error);
+        log.error('error', 'Could not verify password');
         return false;
     }
 }
