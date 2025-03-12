@@ -4,8 +4,6 @@ import { IJwtPayload } from '@utils/types';
 import { CustomError } from '@errors/CustomError';
 import { ErrorCodes } from '@errors/ErrorCodes';
 import { StatusCodes } from 'http-status-codes';
-// function handleAccessToken() {}
-// function handleRefreshToken() {}
 
 export function tokenHandler(req: Request, res: Response, next: NextFunction) {
     if (req?.headers?.authorization) {

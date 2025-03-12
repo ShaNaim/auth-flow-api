@@ -82,12 +82,12 @@
         "*": "prettier --write --ignore-unknown"
     },
     "_moduleAliases": {
-        "@errors": "./dist/errors",
-        "@config": "./dist/config",
-        "@common": "./dist/common",
-        "@middlewares": "./dist/middlewares",
-        "@modules": "./dist/modules",
-        "@utils": "./dist/utils",
-        "@provider": "./dist/utils/provider"
+        "@errors": "src/errors",
+        "@config": "src/config",
+        "@common": "src/common",
+        "@middlewares": "src/middlewares",
+        "@modules": "src/modules",
+        "@utils": "src/utils",
+        "@provider": "src/utils/provider"
     }
 }

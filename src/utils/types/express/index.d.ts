@@ -1,6 +1,13 @@
-declare namespace Express {
-    interface Request {
-        userId: number;
-        jwt?: { sub: number; email: string; iat: number; issuer: string; audience: string };
+import { IJwtPayload } from '@utils/types';
+
+declare global {
+    namespace Express {
+        interface Request {
+            userId?: number;
+            jwt?: IJwtPayload;
+        }
     }
 }
+
+// This is important - it makes the file a module rather than a script
+export {};
