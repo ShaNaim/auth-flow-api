@@ -1,4 +1,3 @@
-import 'module-alias/register';
 import express, { Application, Request, Response } from 'express';
 import errorHandler from '@middlewares/errorHandler';
 import environment from '@config/config';
