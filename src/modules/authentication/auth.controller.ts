@@ -37,11 +37,11 @@ export async function loginController(req: RequestType<LoginSchema, unknown, unk
     try {
         const body = req?.body;
         const clientIP = req.ip || null;
-        logger.info(`Login attempt for email: ${body?.email} from IP: ${clientIP}`);
+        logger.info(`Controller => Login attempt for email: ${body?.email} from IP: ${clientIP}`);
 
         const user = await authServices.authenticateUser(body);
         if (!user) {
-            logger.error(`Authentication failed for email: ${body?.email}`);
+            logger.error(`Controller => Authentication failed for email: ${body?.email}`);
             throw new CustomError({
                 code: ErrorCodes.UnknownError,
                 status: StatusCodes.INTERNAL_SERVER_ERROR,
@@ -53,13 +53,13 @@ export async function loginController(req: RequestType<LoginSchema, unknown, unk
             });
         }
 
-        logger.info(`User authenticated successfully: ${user.email}`);
+        logger.info(`Controller => User authenticated successfully: ${user.email}`);
 
         const csrfToken = await authServices.generateCSRFToken();
         const { accessToken, refreshToken } = authServices.getSignedTokens(user);
 
         if (!accessToken || !refreshToken) {
-            logger.error(`Token generation failed for user: ${user.email}`);
+            logger.error(`Controller => Token generation failed for user: ${user.email}`);
             throw new CustomError({
                 code: ErrorCodes.ServerError,
                 status: StatusCodes.INTERNAL_SERVER_ERROR,
@@ -80,7 +80,7 @@ export async function loginController(req: RequestType<LoginSchema, unknown, unk
             expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
         });
 
-        logger.info(`Tokens stored successfully for user: ${user.email}`);
+        logger.info(`Controller => Tokens stored successfully for user: ${user.email}`);
 
         res.cookie('accessToken', accessToken, {
             httpOnly: true,
@@ -90,7 +90,7 @@ export async function loginController(req: RequestType<LoginSchema, unknown, unk
             domain: process.env.COOKIE_DOMAIN || undefined,
             signed: true
         });
-        logger.info(`accessToken cookie set successfully`);
+        logger.info(`Controller => accessToken cookie set successfully`);
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
             secure: config.mode === 'production',
@@ -100,18 +100,18 @@ export async function loginController(req: RequestType<LoginSchema, unknown, unk
             signed: true
         });
 
-        logger.info(`refreshToken cookie set successfully`);
+        logger.info(`Controller => refreshToken cookie set successfully`);
         res.cookie('XSRF-TOKEN', csrfToken, {
             httpOnly: false,
             secure: config.mode === 'production',
             sameSite: 'lax',
             maxAge: 15 * 60 * 1000
         });
-        logger.info(`XSRF-TOKEN cookie set successfully`);
-        logger.info(`Login successful for user: ${user.email}`);
+        logger.info(`Controller => XSRF-TOKEN cookie set successfully`);
+        logger.info(`Controller => Login successful for user: ${user.email}`);
         res.status(200).json(responseObject({ email: user?.email, slug: user?.slug, csrfToken }, false));
     } catch (error) {
-        logger.error(`Login error: ${error}`);
+        logger.error(`Controller => Login error: ${error}`);
         gracefulErrorHandler.handleError(error as Error, res);
     }
 }
@@ -123,13 +123,13 @@ export async function loginController(req: RequestType<LoginSchema, unknown, unk
  */
 export async function registerController(req: RequestType<RegisterSchema, unknown, unknown>, res: Response) {
     try {
-        logger.info(`Registering new user: ${req.body.email}`);
+        logger.info(`Controller => Registering new user: ${req.body.email}`);
         req.body.password = await authServices.hashString(req?.body?.password);
         const newUser = await userServices.createUserService(req.body);
-        logger.info(`User registered successfully: ${newUser.email}`);
+        logger.info(`Controller => User registered successfully: ${newUser.email}`);
         res.status(200).json(responseObject(newUser, false));
     } catch (error) {
-        logger.error(`User registration failed: ${error}`);
+        logger.error(`Controller => User registration failed: ${error}`);
         gracefulErrorHandler.handleError(error as Error, res);
     }
 }
@@ -140,7 +140,7 @@ export async function registerController(req: RequestType<RegisterSchema, unknow
  * @param {Response} res - Express response object.
  */
 export function logoutController(req: Request, res: Response) {
-    logger.info(`User logged out`);
+    logger.info(`Controller => User logged out`);
     res.status(200).json(responseObject('logout successful', false));
 }
 
@@ -151,10 +151,10 @@ export function logoutController(req: Request, res: Response) {
  */
 export async function blockUserController(req: Request, res: Response) {
     try {
-        logger.info(`Block user request received for: ${req.params.slug}`);
+        logger.info(`Controller => Block user request received for: ${req.params.slug}`);
         const existingUser = await authServices.userExists(req?.params?.slug);
         if (!existingUser) {
-            logger.warn(`Attempted to block non-existing user: ${req.params.slug}`);
+            logger.warn(`Controller => Attempted to block non-existing user: ${req.params.slug}`);
             throw new CustomError({
                 code: ErrorCodes.NotFound,
                 status: StatusCodes.NOT_FOUND,
@@ -166,7 +166,7 @@ export async function blockUserController(req: Request, res: Response) {
         const newBlockedStatus = !existingUser.isBlocked;
         const updatedUser = await userServices.updateUser({ id: existingUser.id, isBlocked: newBlockedStatus });
         if (!updatedUser) {
-            logger.error(`Failed to update block status for user: ${req.params.slug}`);
+            logger.error(`Controller => Failed to update block status for user: ${req.params.slug}`);
             throw new CustomError({
                 code: ErrorCodes.CrudError,
                 status: StatusCodes.INTERNAL_SERVER_ERROR,
@@ -175,12 +175,12 @@ export async function blockUserController(req: Request, res: Response) {
             });
         }
 
-        logger.info(`User ${req.params.slug} has been ${newBlockedStatus ? 'Blocked' : 'Unblocked'}`);
+        logger.info(`Controller => User ${req.params.slug} has been ${newBlockedStatus ? 'Blocked' : 'Unblocked'}`);
         res.status(200).json(
             responseObject({ message: `User with credential: ${req.params.slug} has been ${newBlockedStatus ? 'Blocked' : 'Unblocked'}` })
         );
     } catch (error) {
-        logger.error(`Error blocking user: ${error}`);
+        logger.error(`Controller => Error blocking user: ${error}`);
         gracefulErrorHandler.handleError(error as Error, res);
     }
 }
