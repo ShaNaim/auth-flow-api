@@ -13,6 +13,8 @@ function validateEnv(): void {
         DATABASE_URL: str(),
         PORT: port({ default: 3000 }),
         API_VERSION: num({ default: 1 }),
+        TOKEN_SECRET: str(),
+        COOKIE_SECRET: str(),
         ACCESS_TOKEN_VALID_TIME: num({ default: 1 }),
         REFRESH_TOKEN_VALID_TIME: num({ default: 1 }),
         ACCESS_TOKEN_PUBLIC_KEY: str(),

@@ -26,7 +26,7 @@ function initializeMiddlewares(): void {
     app.use(express.json());
     app.use(hpp());
     app.use(compression());
-    app.use(cookieParser());
+    app.use(cookieParser(environment.cookie_secret));
     app.set('trust proxy', true);
     app.use(tokenHandler);
     app.use(requestIdMiddleware);

@@ -8,7 +8,7 @@ const authRouter: Router = express.Router();
 
 authRouter.get('/health', authController?.healthController);
 authRouter.post('/login', [requestValidator(loginInputSchema)], authController?.loginController);
-authRouter.post('/register', [requestValidator(registerInputSchema)], authController?.reginsterController);
+authRouter.post('/register', [requestValidator(registerInputSchema)], authController?.registerController);
 authRouter.get('/logout', [tokenRequired], authController?.logoutController);
 authRouter.put('/block/:slug', [tokenRequired, requestValidator(getBySlugParamsSchema)], authController.blockUserController);
 
