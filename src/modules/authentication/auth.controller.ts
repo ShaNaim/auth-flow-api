@@ -10,6 +10,7 @@ import { CustomError } from '@errors/CustomError';
 import * as authServices from './auth.service';
 import logger from '@config/logger.config';
 import config from '@config/config';
+import { TokenHandler } from '@utils/handlers';
 
 /**
  * Health check controller to verify if the authentication system is running.
@@ -81,32 +82,15 @@ export async function loginController(req: RequestType<LoginSchema, unknown, unk
         });
 
         logger.info(`Controller => Tokens stored successfully for user: ${user.email}`);
+        TokenHandler.setTokenCookies(res, accessToken, refreshToken);
 
-        res.cookie('accessToken', accessToken, {
-            httpOnly: true,
-            secure: config.mode === 'production',
-            sameSite: 'lax',
-            maxAge: 15 * 60 * 1000,
-            domain: process.env.COOKIE_DOMAIN || undefined,
-            signed: true
-        });
-        logger.info(`Controller => accessToken cookie set successfully`);
-        res.cookie('refreshToken', refreshToken, {
-            httpOnly: true,
-            secure: config.mode === 'production',
-            sameSite: 'lax',
-            maxAge: 7 * 24 * 60 * 60 * 1000,
-            domain: process.env.COOKIE_DOMAIN || undefined,
-            signed: true
-        });
-
-        logger.info(`Controller => refreshToken cookie set successfully`);
         res.cookie('XSRF-TOKEN', csrfToken, {
             httpOnly: false,
             secure: config.mode === 'production',
             sameSite: 'lax',
             maxAge: 15 * 60 * 1000
         });
+
         logger.info(`Controller => XSRF-TOKEN cookie set successfully`);
         logger.info(`Controller => Login successful for user: ${user.email}`);
         res.status(200).json(responseObject({ email: user?.email, slug: user?.slug, csrfToken }, false));

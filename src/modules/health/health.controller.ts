@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import os from 'os';
 import { responseObject } from '@provider/response.provider';
 import { Uptime } from '@utils/types/server.types';
-import { millisecondsToStrAI } from '@utils/handle-format';
+import { millisecondsToStrAI } from '@utils/handlers/handle-format';
 export function healthCheckController(req: Request, res: Response) {
     res.status(200).json(
         responseObject(
