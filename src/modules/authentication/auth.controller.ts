@@ -85,10 +85,11 @@ export async function loginController(req: RequestType<LoginSchema, unknown, unk
         TokenHandler.setTokenCookies(res, accessToken, refreshToken);
 
         res.cookie('XSRF-TOKEN', csrfToken, {
-            httpOnly: false,
+            httpOnly: true,
             secure: config.mode === 'production',
             sameSite: 'lax',
-            maxAge: 15 * 60 * 1000
+            maxAge: 15 * 60 * 1000, // 15 minutes
+            signed: true
         });
 
         logger.info(`Controller => XSRF-TOKEN cookie set successfully`);
