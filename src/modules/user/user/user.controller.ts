@@ -17,7 +17,7 @@ import {
 } from '@utils/validator/requestSchemaValidator';
 
 import userServices, { getUserbyId } from './user.service';
-import { isValueInObject } from '@utils/handle-validation';
+import { isValueInObject } from '@utils/handlers/handle-validation';
 import personServices from '@modules/user/person';
 import addressServices from '@modules/user/address';
 

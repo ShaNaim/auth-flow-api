@@ -19,7 +19,8 @@ export default {
     host_name: process.env.HOSTNAME,
     mode: process.env.NODE_ENV,
     version: process.env.API_VERSION,
-
+    token_secret: process.env.TOKEN_SECRET,
+    cookie_secret: process.env.COOKIE_SECRET,
     access_token_public_key: process.env.ACCESS_TOKEN_PUBLIC_KEY,
     access_token_private_key: process.env.ACCESS_TOKEN_PRIVATE_KEY,
     refresh_token_public_key: process.env.REFRESH_TOKEN_PUBLIC_KEY,

@@ -15,7 +15,7 @@ import { StatusCodes } from 'http-status-codes';
 import router from './routes';
 import os from 'os';
 import { serverModes } from '@config/server.config';
-import { tokenHandler } from '@middlewares/tokenHandler';
+import { tokenHandlerMiddleware } from '@middlewares/tokenHandler';
 
 const app: Application = express();
 const server: Server = createServer(app);
@@ -26,9 +26,9 @@ function initializeMiddlewares(): void {
     app.use(express.json());
     app.use(hpp());
     app.use(compression());
-    app.use(cookieParser());
+    app.use(cookieParser(environment.cookie_secret));
     app.set('trust proxy', true);
-    app.use(tokenHandler);
+    app.use(tokenHandlerMiddleware);
     app.use(requestIdMiddleware);
     app.use(responseLogger);
     app.use(requestLogger);

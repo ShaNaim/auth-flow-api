@@ -27,4 +27,5 @@ export class ErrorCodes {
     public static readonly RelationViolation = 'RelationViolation';
     public static readonly RequiredRecordNotFound = 'RequiredRecordNotFound';
     public static readonly DeadlockDetected = 'DeadlockDetected';
+    public static readonly ForbiddenError = 'ForbiddenError';
 }
