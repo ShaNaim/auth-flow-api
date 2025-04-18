@@ -1,15 +1,48 @@
 {
     "compilerOptions": {
         "target": "ES2022",
-        "module": "Node16",
-        "esModuleInterop": true,
-        "forceConsistentCasingInFileNames": true,
+        "module": "NodeNext",
+        "lib": ["ES2022", "DOM", "DOM.Iterable"],
+        "moduleResolution": "NodeNext",
+
         "strict": true,
-        "skipLibCheck": true,
-        "moduleResolution": "Node16",
+        "noImplicitAny": true,
+        "strictNullChecks": true,
+        "strictFunctionTypes": true,
+        "strictBindCallApply": true,
+        "noImplicitThis": true,
+        "useUnknownInCatchVariables": true,
+        "alwaysStrict": true,
+        "noUncheckedIndexedAccess": true,
+        "noImplicitOverride": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noImplicitReturns": true,
+        "noFallthroughCasesInSwitch": true,
+
+        // Module resolution
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "resolveJsonModule": true,
+
+        // Emit controls
+        "declaration": true,
+        "declarationMap": true,
+        "sourceMap": true,
         "outDir": "./dist",
         "rootDir": "./src",
+        "removeComments": false,
+        "incremental": true,
+
+        // Path aliases for cleaner imports
         "baseUrl": "./",
+
+        // Additional settings
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "allowJs": true,
+        "checkJs": true,
+        "isolatedModules": true,
         "paths": {
             "@errors/*": ["src/errors/*"],
             "@config/*": ["src/config/*"],
@@ -21,6 +54,6 @@
         },
         "typeRoots": ["./src/utils/types", "./node_modules/@types"]
     },
-    "exclude": ["node_modules", "dist"],
+    "exclude": ["node_modules", "dist", "eslint.config.mjs"],
     "include": ["src/**/*.ts", "eslint.config.mjs"]
 }

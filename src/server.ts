@@ -1,21 +1,29 @@
-import express, { Application, Request, Response } from 'express';
-import errorHandler from '@middlewares/errorHandler';
-import environment from '@config/config';
-import hpp from 'hpp';
-import log, { requestIdMiddleware, responseLogger, requestLogger, errorLogger } from '@config/logger.config';
-import compression from 'compression';
-import cookieParser from 'cookie-parser';
-import helmet from 'helmet';
 import cors from 'cors';
-import { createServer, Server } from 'http';
+
+import type { Server } from 'http';
+import { createServer } from 'http';
+
 import { CustomError } from '@errors/CustomError';
-import { ErrorArgs } from '@errors/ErrorArgs';
+import type { ErrorArgs } from '@errors/ErrorArgs';
 import { ErrorCodes } from '@errors/ErrorCodes';
 import { StatusCodes } from 'http-status-codes';
+
 import router from './routes';
+
 import os from 'os';
+import environment from '@config/config';
+import log, { requestIdMiddleware, responseLogger, requestLogger, errorLogger } from '@config/logger.config';
+
 import { serverModes } from '@config/server.config';
+import errorHandler from '@middlewares/errorHandler';
 import { tokenHandlerMiddleware } from '@middlewares/tokenHandler';
+import compression from 'compression';
+import cookieParser from 'cookie-parser';
+import express from 'express';
+import helmet from 'helmet';
+import hpp from 'hpp';
+
+import type { Application, Request, Response } from 'express';
 
 const app: Application = express();
 const server: Server = createServer(app);
@@ -47,7 +55,9 @@ function initializeRoutes(): void {
 }
 
 function initializeNetworkAccess(): void {
-    if (environment.mode !== serverModes.development) return;
+    if (environment.mode !== serverModes.development) {
+        return;
+    }
     const networkInterfaces = os.networkInterfaces();
 
     // Find the IPv4 address in your network interfaces
