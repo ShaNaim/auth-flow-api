@@ -22,7 +22,6 @@ const server: Server = createServer(app);
 const initialUrl = `/api/v/${environment.version}`;
 
 function initializeMiddlewares(): void {
-    app.use(cors());
     app.use(express.json());
     app.use(hpp());
     app.use(compression());
@@ -36,6 +35,49 @@ function initializeMiddlewares(): void {
 
 function initializeHelmet(): void {
     app.use(helmet());
+}
+
+function initializeCors(): void {
+    const whitelist = ['http://localhost:4400'];
+
+    app.use(
+        cors({
+            origin: (origin, cb) => {
+                if (!origin || whitelist.includes(origin)) {
+                    return cb(null, true);
+                }
+                return cb(
+                    new CustomError({
+                        code: ErrorCodes.CorsError,
+                        status: StatusCodes.FORBIDDEN,
+                        description: 'CORS not allowed'
+                    }),
+                    false
+                );
+            },
+            credentials: true
+        })
+    );
+
+    app.options(
+        '*',
+        cors({
+            origin: (origin, cb) => {
+                if (!origin || whitelist.includes(origin)) {
+                    return cb(null, true);
+                }
+                return cb(
+                    new CustomError({
+                        code: ErrorCodes.CorsError,
+                        status: StatusCodes.FORBIDDEN,
+                        description: 'CORS not allowed'
+                    }),
+                    false
+                );
+            },
+            credentials: true
+        })
+    );
 }
 
 function initializeRoutes(): void {
@@ -110,6 +152,7 @@ function listen(): void {
     });
 }
 
+initializeCors();
 initializeMiddlewares();
 initializeHelmet();
 initializeRoutes();
