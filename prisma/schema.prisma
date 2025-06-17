@@ -10,54 +10,50 @@ datasource db {
 model User {
   id           Int            @id @default(autoincrement())
   email        String         @unique @db.VarChar(100)
-  slug         String         @unique @default(uuid()) // UUID for reference
-  password     String         @db.VarChar(255) // For storing hashed passwords (sufficient length)
+  slug         String         @unique @default(uuid())
+  password     String         @db.VarChar(255)
   isActive     Boolean        @default(false)
-  isVarified   Boolean        @default(false)
+  isVerified   Boolean        @default(false) 
   isBlocked    Boolean        @default(false)
-  person       Person? // Relating to Person model
-  tokens       Session[] // One-to-many relation with Token model
-  createdAt    DateTime?      @default(now())
-  updatedAt    DateTime?      @updatedAt
+  person       Person?
+  createdAt    DateTime       @default(now()) 
+  updatedAt    DateTime       @updatedAt      
   RefreshToken RefreshToken[]
+
+  @@index([email])
+  @@index([isActive])
+  @@index([isBlocked])
 }
 
 model Person {
-  id        Int       @id @default(autoincrement()) // Auto-incrementing ID for Person
+  id        Int      @id @default(autoincrement())
   firstName String
   lastName  String?
-  phone     String    @unique @db.VarChar(20) // Phone number, limited to 20 digits
-  address   Address? // Optional one-to-one relation with Address
-  slug      String    @unique @default(uuid()) // UUID for reference
-  userId    Int       @unique
-  user      User?     @relation(fields: [userId], references: [id]) // One-to-one relation with User
-  createdAt DateTime? @default(now()) // Created timestamp
-  updatedAt DateTime? @updatedAt // Automatically updated timestamp
+  phone     String   @unique @db.VarChar(20)
+  address   Address?
+  slug      String   @unique @default(uuid())
+  userId    Int      @unique
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now()) 
+  updatedAt DateTime @updatedAt      
+
+  @@index([firstName])
+  @@index([phone])
 }
 
 model Address {
-  id         Int       @id @default(autoincrement()) // Auto-incrementing ID for Address
-  personId   Int?      @unique // Foreign key, one-to-one relation with Person
-  person     Person?   @relation(fields: [personId], references: [id]) // Defining the relation
-  slug       String    @unique @default(uuid()) // UUID for reference
+  id         Int      @id @default(autoincrement())
+  personId   Int?     @unique
+  person     Person?  @relation(fields: [personId], references: [id])
+  slug       String   @unique @default(uuid())
   street     String
   city       String
   postalCode Int
   country    String?
   district   String?
   area       String?
-  createdAt  DateTime? @default(now()) // Created timestamp
-  updatedAt  DateTime? @updatedAt // Automatically updated timestamp
-}
-
-model Session {
-  id        Int       @id @default(autoincrement()) // Auto-incrementing ID for Token
-  userId    Int // Foreign key for User
-  user      User      @relation(fields: [userId], references: [id]) // Relating to User
-  isActive  Boolean   @default(true) // If token is currently active
-  isBlocked Boolean   @default(false) // If token is blocked (e.g., due to suspicious activity)
-  createdAt DateTime? @default(now()) // Created timestamp
-  updatedAt DateTime? @updatedAt // Automatically updated timestamp
+  createdAt  DateTime @default(now()) 
+  updatedAt  DateTime @updatedAt      
 }
 
 model RefreshToken {

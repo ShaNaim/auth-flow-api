@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import jwt from 'jsonwebtoken';
 import * as argon2 from 'argon2';
 import { StatusCodes } from 'http-status-codes';
-import { User, Session } from '@prisma/client';
+import { User } from '@prisma/client';
 
 import logger from '@config/logger.config';
 import { ErrorCodes } from '@errors/ErrorCodes';
@@ -221,30 +221,6 @@ export async function rotateRefreshToken(options: {
 export async function storeRefreshToken(options: StoreRefreshTokenParams): Promise<void> {
     logger.info('Service => Storing refresh token in database');
     await authModel.storeRefreshToken(options);
-}
-
-/**
- * Handles user session creation or retrieval.
- * @param user - The user object.
- * @returns The session object associated with the user.
- */
-export async function handleSession(user: User): Promise<Session> {
-    logger.info(`Service => Handling session for user ${user.email}`);
-    const hasSession = await authModel.findSessionsByUserId(user?.id);
-    if (hasSession.length !== 0) {
-        return hasSession[0];
-    }
-    return await authModel.createSession(user.id);
-}
-
-/**
- * Generates a new session for a user.
- * @param user - The user object.
- * @returns The new session object.
- */
-export async function generateSession(user: User): Promise<Session> {
-    logger.info(`Service => Generating new session for user ${user.email}`);
-    return await authModel.createSession(user.id);
 }
 
 /**

@@ -4,11 +4,6 @@ export type UserWithPerson = User & {
     person: Person | null;
 };
 
-export interface SessionUpdateData {
-    isActive?: boolean;
-    isBlocked?: boolean;
-}
-
 export interface StoreRefreshTokenParams {
     userId: number;
     tokenHash: string;

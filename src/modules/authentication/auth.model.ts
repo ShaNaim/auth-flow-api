@@ -1,70 +1,9 @@
-import { PrismaClient, Session, User, RefreshToken } from '@prisma/client';
+import { PrismaClient, User, RefreshToken } from '@prisma/client';
 import { IdType } from '@utils/types';
-import { SessionUpdateData, UserWithPerson, StoreRefreshTokenParams, RotateRefreshTokenParams } from './auth.types';
+import { UserWithPerson, StoreRefreshTokenParams, RotateRefreshTokenParams } from './auth.types';
 import logger from '@config/logger.config'; // Importing the logger
 
 const prisma = new PrismaClient();
-
-/**
- * Creates a session for a user.
- * @param userId - The ID of the user for whom the session is being created.
- * @returns The created session object.
- */
-export async function createSession(userId: IdType<User>): Promise<Session> {
-    logger.info(`Model => Creating session for user with ID: ${userId}`);
-    return await prisma.session.create({
-        data: {
-            user: { connect: { id: userId } }
-        }
-    });
-}
-
-/**
- * Updates the session's status.
- * @param sessionId - The ID of the session to be updated.
- * @param sessionData - The session data to update (e.g., isActive, isBlocked).
- * @returns The updated session object.
- */
-export async function updateSession(sessionId: IdType<Session>, sessionData: SessionUpdateData): Promise<Session> {
-    logger.info(`Model => Updating session with ID: ${sessionId}`);
-    return await prisma.session.update({
-        where: { id: sessionId },
-        data: {
-            isActive: sessionData.isActive,
-            isBlocked: sessionData.isBlocked
-        }
-    });
-}
-
-/**
- * Finds all sessions associated with a user by their user ID.
- * @param userId - The ID of the user to search sessions for.
- * @returns A list of session objects associated with the user.
- */
-export async function findSessionsByUserId(userId: IdType<User>): Promise<Session[]> {
-    logger.info(`Model => Finding sessions for user with ID: ${userId}`);
-    return await prisma.session.findMany({ where: { userId } });
-}
-
-/**
- * Deletes all sessions associated with a user by their user ID.
- * @param userId - The ID of the user whose sessions are to be deleted.
- * @returns The number of deleted sessions.
- */
-export async function deleteSessionsByUserId(userId: IdType<User>): Promise<{ count: number }> {
-    logger.info(`Model => Deleting sessions for user with ID: ${userId}`);
-    return await prisma.session.deleteMany({ where: { userId } });
-}
-
-/**
- * Deletes a session by its session ID.
- * @param sessionId - The ID of the session to be deleted.
- * @returns The deleted session object.
- */
-export async function deleteSessionById(sessionId: IdType<Session>): Promise<Session> {
-    logger.info(`Model => Deleting session with ID: ${sessionId}`);
-    return await prisma.session.delete({ where: { id: sessionId } });
-}
 
 /**
  * Retrieves a user for authentication by their email.
