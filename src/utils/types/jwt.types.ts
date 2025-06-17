@@ -8,8 +8,10 @@ export interface IJwtPayload {
     sub: number;
     email: string;
     iat: number;
+    exp: number;
     issuer: string;
     audience: string;
+    type: 'access' | 'refresh';
 }
 
 export type IJwtPrivateKey = 'access_token_private_key' | 'refresh_token_private_key';

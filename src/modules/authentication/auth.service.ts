@@ -64,15 +64,20 @@ export function getKey(keyName: IJwtPrivateKey | IJwtPublicKey): string {
  */
 export function signAccessToken(user: User): string {
     logger.info(`Service => Signing access token for user ${user.email}`);
+    const now = dayjs();
     const payload: IJwtPayload = {
         sub: user.id,
         email: user.email,
-        iat: dayjs().valueOf(),
-        issuer: 'shopmate-sha',
-        audience: 'shopmate-sha'
+        iat: now.unix(),
+        exp: now.add(config.access_token_valid_time, 'minute').unix(),
+        issuer: 'auth-flow-api',
+        audience: 'auth-flow-api',
+        type: 'access'
     };
 
-    return getToken(payload, tokenTypes.access_token_private_key as IJwtPrivateKey, Number(config.access_token_valid_time));
+    return jwt.sign(payload, getKey(tokenTypes.access_token_private_key as IJwtPrivateKey), {
+        algorithm: 'RS256'
+    });
 }
 
 /**

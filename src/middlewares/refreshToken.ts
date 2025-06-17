@@ -119,9 +119,11 @@ export async function refreshTokenMiddleware(req: Request, res: Response, next: 
             req.jwt = {
                 sub: user.id,
                 email: user.email,
-                iat: dayjs().valueOf(),
-                issuer: 'shopmate-sha',
-                audience: 'shopmate-sha'
+                iat: dayjs().unix(),
+                exp: dayjs().add(config.access_token_valid_time, 'minute').unix(),
+                issuer: 'auth-flow-api',
+                audience: 'auth-flow-api',
+                type: 'access'
             };
 
             // Log token refresh
