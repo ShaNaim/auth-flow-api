@@ -16,6 +16,7 @@
             "@common/*": ["src/common/*"],
             "@middlewares/*": ["src/middlewares/*"],
             "@modules/*": ["src/modules/*"],
+            "@services/*": ["src/services/*"],
             "@utils/*": ["src/utils/*"],
             "@provider/*": ["src/utils/provider/*"]
         },
