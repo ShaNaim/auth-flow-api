@@ -14,7 +14,11 @@
         "format-db": "prisma format",
         "token": "generate-token --keyDir off --log off",
         "generate-secret": "node -e \"console.log(require('crypto').randomBytes(64).toString('hex'))\"",
-        "check-node": "node -e \"process.exit(process.version === 'v20.16.0' ? 0 : 1)\""
+        "check-node": "node -e \"process.exit(process.version === 'v20.16.0' ? 0 : 1)\"",
+        "worker": "NODE_ENV=production node -r tsconfig-paths/register dist/workers/index.js",
+        "worker:dev": "NODE_ENV=development nodemon --exec 'ts-node -r tsconfig-paths/register' src/workers/index.ts",
+        "worker:build": "tsc && tsc-alias",
+        "test:email": "ts-node -r tsconfig-paths/register src/scripts/email.test.ts"
     },
     "engines": {
         "node": "=v20.16.0",
